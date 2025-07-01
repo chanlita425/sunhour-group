@@ -1,0 +1,20 @@
+{
+  "_vendor-DJjOBum0.js": {
+    "file": "assets/vendor-DJjOBum0.js",
+    "name": "vendor"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CD9DAS7W.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DaUJ5gTB.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor-DJjOBum0.js"
+    ]
+  }
+}

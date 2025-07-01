@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Moul&family=Siemreap&display=swap');
+/* Optional: Add custom styles below */
+body {
+    font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+ ::-webkit-scrollbar {
+     width: 8px;
+ }
+
+ /* Scrollbar Thumb */
+ ::-webkit-scrollbar-thumb {
+     background-color: rgba(255, 255, 255, 0.8);
+     /* Semi-transparent white */
+     border-radius: 4px;
+     border: 2px solid rgb(255, 255, 255);
+     /* Adds contrast for visibility */
+ }
+
+ /* Scrollbar Track */
+ ::-webkit-scrollbar-track {
+     background-color: rgb(255, 255, 255);
+     /* Slightly visible track */
+ }
+
+ /* Firefox scrollbar (optional) */
+ * {
+     scrollbar-color: rgb(255, 255, 255) rgb(255, 255, 255);
+     scrollbar-width: thin;
+ }
