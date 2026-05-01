@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 @section('meta_tag')
-    {!! SEO::generate() !!}
+    {!! SEOMeta::generate() !!}
 @endsection
 @section('content')
     {{-- Navbar --}}
@@ -37,69 +37,48 @@
                 />
             @else
                 <img loading="lazy"
-                    src="https://www.toto.com/en/neorestcollections/images/p_mainv_sp.jpg"
+                    src="https://asia.toto.com/neorestcollections/images/p_mainv.jpg"
                     class="w-full h-[30vh] xl:h-[40vh] object-cover"
                     alt=""
                 />
             @endif
         </div>
         <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="text-center font-medium text-[30px] font-['Inter'] p-5">@lang('message.product')</h1>
+            <h1 class="text-center font-medium text-[30px] p-5">@lang('message.product')</h1>
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] pb-[10rem] md:pb-[11rem]  lg:pb-[3rem] p-3 md:p-0">
                 @foreach($product as $item)
                     @if($item->status === 1)
                         <a href="{{ route('category.show', [$brands->slug, $item->slug]) }}" class="group transition-all duration-150 ease-in-out">
                             <div class="w-full {{$brands->uuid === 'bXRMSTQ3OC0y' ? 'h-full md:h-[200px]':'h-[200px] md:h-[230px]'}} mx-auto overflow-hidden">
                                 @if(empty($item->link))
-                                    <img loading="lazy" src="https://placehold.co/500x330" alt="" class="w-[500px] py-2 h-full mx-auto object-center object-contain ">
+                                    <img loading="lazy" src="https://placehold.co/500x330" alt="" class="w-full lg:w-[400px] h-full mx-auto object-center object-cover ">
                                 @else
-                                    <img loading="lazy" class="w-full h-full mx-auto object-center {{ $brands->uuid !== 'bXRMSTQ3OC0y' && $brands->uuid !== 'OVhQd3B1dy0x' && $brands->uuid !== 'NWpEWGJUWi0z' && $brands->uuid !== 'ZG56bDFzUS00' ? 'object-cover' : 'object-contain' }} group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
+                                    <img loading="lazy" class="w-full h-full mx-auto object-center {{ $brands->uuid !== 'bXRMSTQ3OC0y' && $brands->uuid !== 'OVhQd3B1dy0x' && $brands->uuid !== 'NWpEWGJUWi0z' && $brands->uuid !== 'ZG56bDFzUS00' ? 'object-cover' : 'object-cover' }} group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
                                          src="{{$item->link}}" alt="{{$item->name}}">
                                 @endif
                             </div>
-                            <h1 class="relative w-fit mx-auto text-center text-wrap text-[16px] md:text-[14px] lg:text-[16] 2xl:text-[18px] leading-[14px] md:leading-[16px] 2xl:leading-[18px]  font-[500] font-['Inter'] p-3
-                        before:content-['']
-                        before:absolute
-                        before:bottom-0
-                        before:left-0
-                        before:w-full
-                        before:h-[2px]
-                        before:bg-gray-900
-                        before:scale-x-[0]
-                        before:transition-transform
-                        before:duration-[500ms]
-                        before:ease-in-out
-                        before:origin-bottom-right
-                        group-hover:before:scale-x-[1]
-                        group-hover:before:origin-bottom-left
-                        ">{{session()->get('locale') == 'en' ? $item->name : (session()->get('locale') == 'kh' ? $item->name_khmer : $item->name_chinese)}}</h1>
+                            <h1 class="relative w-fit mx-auto text-center text-wrap text-[16px] md:text-[14px] lg:text-[16] 2xl:text-[18px] leading-[14px] md:leading-[16px] 2xl:leading-[18px]  font-[500] p-3
+                                before:content-[''] before:absolute
+                                before:bottom-0 before:left-0 before:w-full  before:h-[2px] before:bg-gray-900 before:scale-x-[0] before:transition-transform before:duration-[500ms]
+                                before:ease-in-out before:origin-bottom-right group-hover:before:scale-x-[1] group-hover:before:origin-bottom-left">
+                                {{session()->get('locale') == 'en' ? $item->name : (session()->get('locale') == 'km' ? $item->name_khmer : $item->name_chinese)}}
+                            </h1>
                         </a>
                     @else
                         <a href="{{ route('brands-client.model', [$brands->slug, $item->slug]) }}" class="group transition-all duration-150 ease-in-out">
                             <div class="w-full {{$brands->uuid === 'bXRMSTQ3OC0y' ? 'h-full md:h-[200px]':'h-[200px] md:h-[230px]'}} mx-auto overflow-hidden">
                                 @if(empty($item->link))
-                                    <img loading="lazy" src="https://placehold.co/500x330" alt="" class="w-full  lg:w-[400px] h-full  mx-auto object-center object-cover ">
+                                    <img loading="lazy" src="https://placehold.co/500x330" alt="" class="w-full lg:w-[400px] h-full mx-auto object-center object-cover ">
                                 @else
-                                    <img loading="lazy" class="w-full h-full mx-auto object-center {{ $brands->uuid !== 'bXRMSTQ3OC0y' && $brands->uuid !== 'OVhQd3B1dy0x' && $brands->uuid !== 'NWpEWGJUWi0z' && $brands->uuid !== 'ZG56bDFzUS00' ? 'object-cover' : 'object-contain' }} group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
+                                    <img loading="lazy" class="w-full h-full mx-auto object-center {{ $brands->uuid !== 'bXRMSTQ3OC0y' && $brands->uuid !== 'OVhQd3B1dy0x' && $brands->uuid !== 'NWpEWGJUWi0z' && $brands->uuid !== 'ZG56bDFzUS00' ? 'object-cover' : 'object-cover' }} group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
                                          src="{{$item->link}}" alt="{{$item->name}}">
                                 @endif
                             </div>
-                            <h1 class="relative w-fit mx-auto text-center text-[16px] md:text-[14px] lg:text-[16] 2xl:text-[18px] leading-[14px] md:leading-[16px] 2xl:leading-[18px]  font-[500] font-['Inter'] p-3
-                        before:content-['']
-                        before:absolute
-                        before:bottom-0
-                        before:left-0
-                        before:w-full
-                        before:h-[2px]
-                        before:bg-gray-900
-                        before:scale-x-[0]
-                        before:transition-transform
-                        before:duration-[500ms]
-                        before:ease-in-out
-                        before:origin-bottom-right
-                        group-hover:before:scale-x-[1]
-                        group-hover:before:origin-bottom-left
-                        ">{{session()->get('locale') == 'en' ? $item->name : (session()->get('locale') == 'kh' ? $item->name_khmer : $item->name_chinese)}}</h1>
+                            <h1 class="relative w-fit mx-auto text-center text-[16px] md:text-[14px] lg:text-[16] 2xl:text-[18px] leading-[14px] md:leading-[16px] 2xl:leading-[18px]  font-[500] p-3
+                                before:content-[''] before:absolute before:bottom-0 before:left-0
+                                before:w-full before:h-[2px] before:bg-gray-900 before:scale-x-[0] before:transition-transform before:duration-[500ms]  before:ease-in-out  before:origin-bottom-right  group-hover:before:scale-x-[1]  group-hover:before:origin-bottom-left">
+                                    {{session()->get('locale') == 'en' ? $item->name : (session()->get('locale') == 'km' ? $item->name_khmer : $item->name_chinese)}}
+                            </h1>
                         </a>
                     @endif
                 @endforeach

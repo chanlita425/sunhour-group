@@ -27,7 +27,7 @@
                     <ul>
                         <li>
                             <a class="flex items-center gap-2">
-                                <p>Brands</p>
+                                <p class="font-bold">Brands</p>
                             </a>
                         </li>
                     </ul>

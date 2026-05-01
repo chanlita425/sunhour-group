@@ -1,4 +1,4 @@
-@if ($data->hasPages())
+{{-- @if ($data->hasPages())
     <div class="flex flex-col items-center gap-4 mt-4">
         <!-- Mobile View -->
         <div class="flex justify-between w-full sm:hidden">
@@ -95,4 +95,4 @@
             </div>
         </div>
     </div>
-@endif
+@endif --}}

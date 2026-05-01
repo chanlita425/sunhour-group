@@ -1,6 +1,9 @@
 @extends('layouts.guest')
+@php
+    use Artesaos\SEOTools\Facades\SEOTools;
+@endphp
 @section('meta_tag')
-    {!! SEO::generate() !!}
+    {!! SEOTools::generate() !!}
 @endsection
 @section('content')
     {{-- Navbar --}}
@@ -354,29 +357,51 @@
                     class="w-full h-[40vh] object-cover"
                     alt=""
                 />
+            @elseif ($products->uuid == 'handrail-1')
+                <img
+                    src="https://asia.toto.com/products/universal-design/handrail/images/b.UD_Handrail.jpg"
+                    class="w-full h-[40vh] object-cover"
+                    alt=""
+                />
+            @elseif ($products->uuid == 'WEZZdy01MTk5MjI=')
+                <img
+                    src="https://asia.toto.com/products/universal-design/handrail/images/b.UD_Handrail.jpg"
+                    class="w-full h-[40vh] object-cover"
+                    alt=""
+                />
             @else
                 <img loading="lazy" alt="" src="https://asia.toto.com/products/ecowasher/images/b.%20Washlets_ecowasher.jpg"
                      class="w-full h-[40vh]  object-cover" />
             @endif
         </div>
         <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="text-black text-2xl font-medium font-['Inter'] my-[3rem] capitalize">
-                    {{ str_replace('-', ' ', $categories ?? $products->name) }}
+            <h1 class="text-black text-2xl font-medium my-[3rem] capitalize">
+                    {{ str_replace('-', ' ', $categories ?? (app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese))) }}
+
+                    {{-- @if ($products->slug === 'smart-toilet')
+                        {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'បង្គន់អនាម័យឆ្លាតវៃ' : 'fafdsa ch') }}
+                    @elseif( $products->slug === 'washlet' )
+                        {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'ម៉ាស៊ីនបោកអេកូ' : 'fa dsaf asd') }}
+                    @endif --}}
             </h1>
 
             <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 justify-center xl:justify-start gap-[10px] md:gap-[15px] pb-[10rem]">
                 @foreach ($model as $models)
                     @if (!empty($models->link) && !empty($models->name))
-                        <a href="{{ route('brands-client.model-details', [$brands->slug, $products->slug, $models->uuid]) }}"
+                        <a href="{{ route('brands-client.model-details', [
+                            'locale' => app()->getLocale(),
+                            'brands' => $brands->slug,
+                            'products' => $products->slug,
+                            'models' => $models->uuid
+                        ]) }}"
                            class="w-full hover:shadow-sm hover:scale-[1.01] transition-all duration-150 overflow-hidden">
-                            <article class="flex flex-col justify-between bg-white w-full {{$brands->uuid == 'bXRMSTQ3OC0y' || $brands->uuid == 'ZG56bDFzUS00' ? 'h-full':'h-[440px]'}} border-2 border-gray-200">
+                            <article class="flex flex-col justify-between bg-white w-full {{$brands->uuid == 'bXRMSTQ3OC0y' || $brands->uuid == 'ZG56bDFzUS00' ? 'h-full':'h-[500px]'}} border-2 border-gray-200">
                                 <div class="w-full relative px-2 py-4">
                                     <h1 class="max-w-[150px] text-md 2xl:text-lg font-medium mb-3 2xl:mb-7 min-h-[50px] whitespace-normal break-words">
                                         {{ $models->name }}
                                     </h1>
                                     <div class="max-w-[150px] text-sm 2xl:text-lg font-light mb-1 capitalize">
-                                        <p>     {{ str_replace('-', ' ', $categories ?? $products->name) }}
-</p>
+                                        <p>{{ str_replace('-', ' ', $categories ?? (app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese))) }}</p>
                                     </div>
                                     <div class="{{$products->uuid != 'MHFMay0zMjM5OTI=' ? "hidden": ""}} absolute top-[7.5%] right-2">
                                             <span class="font-medium text-red-600 px-2 py-[2px] text-[18px]">
@@ -388,6 +413,9 @@
                                     <img loading="lazy" src="{{ $models->link }}"
                                          alt="" class="w-full h-full object-contain object-center pb-5">
                                 </div>
+                                <button class="bg-[#0248a4] text-[#FFFFFF] py-2">
+                                    {{ app()->getLocale() == 'en' ? 'More Details' : ($app->getLocale() == 'km' ? 'ព័ត៌មាន​បន្ថែម' : '更多信息') }}
+                                </button>
                             </article>
                         </a>
                     @else

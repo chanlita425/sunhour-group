@@ -43,11 +43,15 @@ class SearchController extends Controller
                 ]);
             }
 
-            // Try to get models by product_id, with search if provided
+            //Try to get models by product_id, with search if provided
             $modelQuery = Models::query()
                 ->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
                 });
+            // $modelQuery = Models::with(['products.brands'])
+            //     ->where(function ($q) use ($search) {
+            //         $q->where('name', 'like', "%{$search}%");
+            // });
 
             $model = $modelQuery->paginate(10); // Add pagination with 10 items per page
             

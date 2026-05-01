@@ -32,7 +32,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request,$brands,$product)
     {
-                // Build the initial query for models by product_id
+        // Build the initial query for models by product_id
         $modelsByProductQuery = Category::query()->where('product_id', $product);
 
         // Check if any exist for product_id

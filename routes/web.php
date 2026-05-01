@@ -1,8 +1,11 @@
 <?php
+use App\Http\Controllers\FAQsController;
+use App\Http\Controllers\Frontend\FAQsFController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FunctionController;
+use App\Http\Controllers\ArticleBackendController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\DailyCleanController;
@@ -19,33 +22,61 @@ use App\Http\Controllers\LocalLangController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ModelsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Frontend\ArticleController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShowRoomController;
 use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\TecnologyController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SignupController;
+use App\Http\Controllers\SitemapController;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Product;
 use App\Models\Admin\Models;
+use App\Models\Article;
+use Artesaos\SEOTools\Facades\SEOTools;
+
+// Route to change language
+Route::get('locale/{locale}', [LocalLangController::class, 'setLocale'])->name('locale');
 
 // Public routes with guest middleware
-Route::get('/', function () {
-    return view('frontends.home');
-})->name('home');
+Route::get('/', [HomeController::class, 'HomePage'])->name('home');
+// Grouped routes
+Route::group([
+    'prefix' => '{locale}',
+    'where' => ['locale' => 'en|km|cn'],
+    'middleware' => \App\Http\Middleware\SetLanguage::class], function () {
 
-Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+        Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+        Route::get('/partnerships', [PartnershipController::class, 'index'])->name('partnerships.index');
+        Route::get('/career', [CareerController::class, 'index'])->name('career.index');
+        Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+        Route::get('/faqs_f', [FAQsFController::class, 'faqs'])->name('faqs');
+        Route::get('/articles', [ArticleController::class, 'article'])->name('articles');
+        Route::get('/articles/{slug}', [ArticleController::class, 'articleShow'])->name('articles.show');
+});
+Route::get('/models', [SearchController::class, 'index'])->name('search.index');
 Route::get('/all/brands', [BrandsController::class, 'index'])->name('brands.all');
 Route::get('/{skug}/product', [BrandsController::class, 'show'])->name('brands-client.show');
 Route::get('/{brands}/{products}/category', [BrandsController::class, 'category'])->name('category.show');
 Route::get('/{brands}/{products}/model', [BrandsController::class, 'model'])->name('brands-client.model');
 Route::get('/{brands}/{products}/{category}/model', [BrandsController::class, 'model_category'])->name('brands-client.model_category');
 Route::get('/{brands}/{products}/{models}/details', [BrandsController::class, 'model_details'])->name('brands-client.model-details');
-Route::get('/partnerships', [PartnershipController::class, 'index'])->name('partnerships.index');
-Route::get('/career', [CareerController::class, 'index'])->name('career.index');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+
+
+// Submit form
+Route::post('/signup/store', [SignupController::class, 'store'])->name('signup.store');
+//  CRUD
+Route::prefix('admin')->group(function () {
+    Route::get('/signups', [SignupController::class, 'index'])->name('signup.index');
+    Route::post('/signups/update/{id}', [SignupController::class, 'update'])->name('signup.update');
+    Route::delete('/signups/delete/{id}', [SignupController::class, 'destroy'])->name('signup.delete');
+});
+
 // Auth routes
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -78,12 +109,14 @@ Route::group(['middleware' => 'auth.jwt', 'prefix' => 'admin'], function () {
     Route::resource('{brands}/{products}/{models}/spaces', SpaceController::class);
     Route::resource('{brands}/{products}/{models}/medias', MediaController::class);
     Route::resource('{brands}/{products}/{models}/downloads', FileDownloadController::class);
+    // This single line defines: index, store, show, update, and destroy (DELETE)
+    Route::resource('/faqs', FAQsController::class);
+   // This generates: GET /admin/article/{article}/edit which is what your fetch is hitting.
+    Route::resource('/article', ArticleBackendController::class);
 });
 
-Route::get('locale/{locale}', [LocalLangController::class, 'setLocale'])->name('locale');
 Route::post('/send-mail', [MailController::class, 'sendMail'])->name('send.mail');
 
-Route::get('/models', [SearchController::class, 'index'])->name('search.index');
 
 Route::get('/generate-sitemap', function () {
     $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -100,36 +133,54 @@ Route::get('/generate-sitemap', function () {
     );
 
     foreach (Brand::all() as $brand) {
-        $sitemap->add(
-            Url::create(route('brands-client.show', $brand->uuid))
-                ->setPriority(0.8)
+    // Brand page
+    $sitemap->add(
+        Url::create(route('brands-client.show', [
+                'locale' => app()->getLocale(),
+                'skug' => $brand->skug
+            ]))
+        ->setPriority(0.8)
+        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+    );
+
+    foreach ($brand->products as $product) {
+        if ($product->status === 1) {
+            $sitemap->add(
+                Url::create(route('category.show', [
+                    'locale' => app()->getLocale(),
+                    'brands' => $brand->slug,
+                    'products' => $product->slug
+                ]))
+                ->setPriority(0.7)
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-        );
+            );
+        } else {
+            $sitemap->add(
+                Url::create(route('brands-client.model', [
+                    'locale' => app()->getLocale(),
+                    'brands' => $brand->slug,
+                    'products' => $product->slug
+                ]))
+                ->setPriority(0.6)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+            );
+        }
 
-        foreach ($brand->products as $product) {
-             if($product->status === 1){
-                $sitemap->add(
-                    Url::create(route('category.show', [$brand->uuid, $product->uuid]))
-                        ->setPriority(0.7)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
-                );
-             }else{
-                $sitemap->add(
-                    Url::create(route('brands-client.model', [$brand->uuid, $product->uuid]))
-                        ->setPriority(0.6)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-                );
-             }
-
-            foreach ($product->models as $model) {
-                $sitemap->add(
-                    Url::create(route('brands-client.model-details', [$brand->uuid, $product->uuid, $model->uuid]))
-                        ->setPriority(0.5)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
-                );
-            }
+        foreach ($product->models as $model) {
+            $sitemap->add(
+                Url::create(route('brands-client.model-details', [
+                    'locale' => app()->getLocale(),
+                    'brands' => $brand->slug,
+                    'products' => $product->slug,
+                    'models' => $model->uuid
+                ]))
+                ->setPriority(0.5)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+            );
         }
     }
+}
+
 
     $sitemap->writeToFile(public_path('sitemap.xml'));
     return '✅ Sitemap generated at /public/sitemap.xml';
@@ -146,3 +197,6 @@ Route::get('/sitemap.xml', function () {
     ]);
 });
 
+
+//For SEO, Google needs each language URL explicitly.
+Route::get('/sitemap', [SitemapController::class, 'index']);

@@ -26,6 +26,55 @@ return [
     'title_aboutus_7' => '2014',
     'title_aboutus_8' => '2018',
 
+
+    'career_title' => 'We’re Hiring!',
+    'career_titles' => 'Join Our Growing Sales Team at SUNHOUR CO., LTD.',
+    'career_title1' => 'Introduction',
+    'career_title2' => 'Available Positions',
+    'career_title3' => 'Indoor Sales (Showroom & Retail)',
+    'career_title4' => 'Outdoor Sales (Retail & Project Site)',
+    'career_title5' => 'Location',
+    'career_title6' => 'Working Hours',
+    'career_title7' => 'Requirements',
+    'career_title8' => 'Why Work With Us?',
+    'career_title9' => 'Apply Now!',
+    'career_introduction_details1' => 'SUNHOUR CO., LTD. – A leading supplier of high-quality bathroom accessories and water solutions – is expanding!',
+    'career_introduction_details2' => 'We proudly distribute premium international and local brands, including:',
+    'career_introduction_details3' => 'Sanitary Ware',
+    'career_introduction_details4' => 'Water Heaters',
+    'career_introduction_details5' => 'Water Pumps',
+    'career_introduction_details6' => 'Local Stainless Steel Water Storage Tanks',
+
+    'career_introduction_details7' => 'Welcome and assist walk-in customers',
+    'career_introduction_details8' => 'Present product features and benefits',
+    'career_introduction_details9' => 'Handle inquiries and process sales orders',
+    'career_introduction_details10' => 'Maintain showroom display and cleanliness',
+    'career_introduction_details11' => 'Visit clients, contractors, and project sites',
+    'career_introduction_details12' => 'Build and maintain strong relationships',
+    'career_introduction_details13' => 'Promote product lines to developers and partners',
+    'career_introduction_details14' => 'Follow up on leads and close sales deals',
+
+    'career_introduction_details15' => 'Phnom Penh',
+    'career_introduction_details16' => 'Monday – Saturday, 8:00 AM – 5:30 PM',
+
+    'career_introduction_details17' => 'Previous sales experience (construction/building materials preferred)',
+    'career_introduction_details18' => 'Strong communication and negotiation skills',
+    'career_introduction_details19' => 'Ability to work independently and in a team',
+    'career_introduction_details20' => 'Honest, responsible, and results-driven',
+    'career_introduction_details21' => 'Motorcycle or car driving license (required for outdoor sales)',
+
+    'career_introduction_details22' => 'Opportunity to represent top international brands',
+    'career_introduction_details23' => 'Professional training and development',
+    'career_introduction_details24' => 'Competitive salary + attractive commission',
+    'career_introduction_details25' => 'Supportive team and career growth opportunities',
+
+    'career_introduction_details26' => 'Send your CV to',
+    'career_introduction_details27' => 'Contact us',
+    'career_introduction_details28' => 'Office Address',
+    'career_introduction_details29' => '#427E0 Monivong Blvd, Sangkat Buengprolit, Khan 7 Makara, Phnom Penh, Cambodia.',
+    'career_introduction_details30' => '+855 12 818 189',
+
+
     'content_aboutus' => "Acquired official distribution rights to import TOTO and ARISTON brand products, introducing them into the high-end construction materials market.",
     'content_aboutus_1' => "The company secured the exclusive import and distribution rights for RAK Ceramics tiles from Dubai, United Arab Emirates.",
     'content_aboutus_2' => "Sun Hour Group began as a general supplier of construction materials, offering a wide range of products from small to large building supplies, bathroom fixtures, tiles, cement, bricks, and a variety of paints for the construction sector.",
@@ -35,6 +84,7 @@ return [
     'content_aboutus_6' => "The company transformed its dealership into a showroom, providing a hands-on experience with premium products.",
     'content_aboutus_7' => "In 2014, Sun Hour Group expanded its footprint with the opening of its second showroom on Mao Tse Tong Boulevard.",
     'content_aboutus_8' => "Continuing its growth, the company launched its third showroom in Siem Reap in 2018, bringing its quality products closer to customers in the northwestern region of Cambodia.",
+
 
     'WTBOP' => 'Want to Become
     Our Partner?',
@@ -72,15 +122,16 @@ Please feel free to contact us by',
     'msg' => 'Enter Message',
     'product' => 'Products',
     'SanitaryWareFitting' => 'Sanitary Ware & Fitting',
-    'WaterHeaterSystem' => 'Water Heater System',
+    'WaterHeaterSystem' => 'Water Heater',
     'WaterPump' => 'Water Pump',
     'WaterFilter' => 'Water Filter',
     'PorcelainTileCeramicTile' => 'Porcelain Tile & Ceramic Tile',
     'Toilets' => 'Toilets',
     'FaucetSeries' => 'Faucet Series',
     'Bathtubs' => 'Bathtubs',
-    'Public' => 'Public',
+    'Public' => 'Public Restrooms',
     'Accessories' => 'Accessories',
+    'Lavatory' => 'Lavatory',
     'InstantaneousWaterHeater' => 'Instantaneous Water Heater (Home Shower)',
     'GasboilerWaterHeater' => 'Gas Boiler Water Heater',
     'StorageWaterHeater' => 'Storage Water Heater',
@@ -99,4 +150,4 @@ Please feel free to contact us by',
     'address' => '#427, Monivong Blv, Sangkat Boeung Prolit, Khan 7 Makara, Phnom Penh, Cambodia',
     'en_cn' => 'English & Chinese Speaking - Project Sale',
     'date' => 'Monday - Sunday'
-]; 
+];

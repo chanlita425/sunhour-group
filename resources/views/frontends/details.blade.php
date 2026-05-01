@@ -1,6 +1,9 @@
 @extends('layouts.guest')
+@php
+    use Artesaos\SEOTools\Facades\SEOTools;
+@endphp
 @section('meta_tag')
-    {!! SEO::generate() !!}
+    {!! SEOTools::generate() !!}
 @endsection
 @section('content')
     @component('components.navbar')
@@ -93,7 +96,10 @@
         </div>
 
         <section class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="font-medium text-[30px] font-['Inter'] p-5">{{$products->name }}</h1>
+            <h1 class="font-medium text-[30px] p-5">
+                {{ app()->getLocale() == 'en' ? $products->name : (app()->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese) }}
+            </h1>
+
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] pb-[10rem] md:pb-[10rem] xl:pb-[5em] lg:pb-[3rem] p-3 md:p-0">
                 @foreach($category as $item)
                     <a href="{{ route('brands-client.model_category', [$brands->slug,$products->slug, $item->slug]) }}" class="group transition-all duration-150 ease-in-out">

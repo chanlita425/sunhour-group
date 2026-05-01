@@ -22,4 +22,16 @@ class SetLanguage
         App::setLocale($locale);
         return $next($request);
     }
+    // public function handle(Request $request, Closure $next) {
+    // $locale = $request->segment(1); // Gets 'en' or 'km' from the URL
+
+    // if (in_array($locale, ['en', 'km', 'cn'])) {
+    //     app()->setLocale($locale);
+    //     session()->put('locale', $locale);
+    // } else {
+    //     // Default if segment 1 is missing
+    //     app()->setLocale(config('app.locale'));
+    // }
+
+    // return $next($request);
 }

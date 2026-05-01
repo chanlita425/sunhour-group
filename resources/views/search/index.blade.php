@@ -31,9 +31,9 @@
             <div
                 class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 justify-center xl:justify-start gap-[10px] md:gap-[15px] pb-[10rem]">
                 @if ($singleModel && $products && $brands)
-                    @foreach ($model as $models)
+                    {{-- @foreach ($model as $models)
                         @if (!empty($models->link) && !empty($models->name))
-                            <a href="{{ route('brands-client.model-details', [$models->products->brands->uuid, $models->products->uuid, $models->uuid]) }}"
+                            <a href="{{ route('brands-client.model-details', [$models->products->brands->slug, $models->products->slug, $models->uuid]) }}"
                                 class="w-full hover:shadow-sm hover:scale-[1.01] transition-all duration-150 overflow-hidden">
                                 <article
                                     class="flex flex-col justify-between bg-white w-full {{ $brands->uuid == 'bXRMSTQ3OC0y' || $brands->uuid == 'ZG56bDFzUS00' ? 'h-full' : 'h-[440px]' }} border-2 border-gray-200">
@@ -42,9 +42,9 @@
                                             class="max-w-[150px] text-md 2xl:text-lg font-medium mb-3 2xl:mb-7 min-h-[50px] whitespace-normal break-words">
                                             {{ $models->name }}
                                         </h1>
-                                        {{-- <div class="max-w-[150px] text-sm 2xl:text-lg font-light mb-1 capitalize">
-                                            <p>{{ $products->uuid == $models->product_id ? $products->name : '' }}</p>
-                                        </div> --}}
+                                            // <div class="max-w-[150px] text-sm 2xl:text-lg font-light mb-1 capitalize">
+                                            //    <p>{{ $products->uuid == $models->product_id ? $products->name : '' }}</p>
+                                             // </div>
                                         <div
                                             class="{{ $models->products->uuid !== 'MHFMay0zMjM5OTI=' ? 'hidden' : '' }} absolute top-[7.5%] right-2">
                                             <span class="font-medium text-red-600 px-2 py-[2px] text-[18px]">
@@ -59,7 +59,43 @@
                                 </article>
                             </a>
                         @endif
+                    @endforeach --}}
+                    @foreach ($model as $models)
+                        @php
+                            $product = $models->products;
+                            $brand = $product ? $product->brands : null;
+                        @endphp
+
+                        @if ($product && $brand && !empty($models->link) && !empty($models->name))
+                            <a href="{{ route('brands-client.model-details', [
+                                $brand->slug,
+                                $product->slug,
+                                $models->uuid
+                            ]) }}"
+                                class="w-full hover:shadow-sm hover:scale-[1.01] transition-all duration-150 overflow-hidden">
+                                <article
+                                    class="flex flex-col justify-between bg-white w-full {{ $brands && ($brands->uuid == 'bXRMSTQ3OC0y' || $brands->uuid == 'ZG56bDFzUS00') ? 'h-full' : 'h-[440px]' }} border-2 border-gray-200">
+                                    <div class="w-full relative px-2 py-4">
+                                        <h1
+                                            class="max-w-[150px] text-md 2xl:text-lg font-medium mb-3 2xl:mb-7 min-h-[50px] whitespace-normal break-words">
+                                            {{ $models->name }}
+                                        </h1>
+                                        <div
+                                            class="{{ $product->uuid !== 'MHFMay0zMjM5OTI=' ? 'hidden' : '' }} absolute top-[7.5%] right-2">
+                                            <span class="font-medium text-red-600 px-2 py-[2px] text-[18px]">
+                                                New
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="w-[180px] mx-auto">
+                                        <img loading="lazy" src="{{ $models->link }}" alt="{{ $models->name }}"
+                                            class="w-full h-full object-contain object-center pb-5">
+                                    </div>
+                                </article>
+                            </a>
+                        @endif
                     @endforeach
+
 
                     {{-- Pagination Links --}}
                     <div class="col-span-full mt-8">

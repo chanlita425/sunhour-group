@@ -27,39 +27,39 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request, $brand)
-{
-    // Start with a query builder instance and eager load categories
-    $query = Product::query()
-        ->where('brand_id', $brand); // <--- eager load categories
+    public function index(Request $request, $brand)
+    {
+        // Start with a query builder instance and eager load categories
+        $query = Product::query()
+            ->where('brand_id', $brand); // <--- eager load categories
 
-    // Handle search
-    if ($request->has('search') && $request->search !== '') {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'like', "%{$search}%"); // Add more searchable fields as needed
+        // Handle search
+        if ($request->has('search') && $request->search !== '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%"); // Add more searchable fields as needed
+            });
+        }
+
+        // Handle items per page
+        $perPage = $request->input('perPage', 10); // Default to 10 if not specified
+        $validPerPage = in_array($perPage, [10, 20, 50]) ? $perPage : 10;
+
+        // Get the paginated results
+        $product = $query->paginate($validPerPage)->appends($request->except('page'));
+        $product->getCollection()->transform(function ($item, $index) use ($product) {
+            $item->auto_number = $index + 1 + ($product->currentPage() - 1) * $product->perPage();
+            return $item;
         });
+
+        $loading = $product->isEmpty();
+
+        $singleData = Brand::query()
+            ->where('uuid', $brand)
+            ->firstOrFail();
+
+        return view('admin.products.index', compact('loading', 'product', 'singleData'));
     }
-
-    // Handle items per page
-    $perPage = $request->input('perPage', 10); // Default to 10 if not specified
-    $validPerPage = in_array($perPage, [10, 20, 50]) ? $perPage : 10;
-
-    // Get the paginated results
-    $product = $query->paginate($validPerPage)->appends($request->except('page'));
-    $product->getCollection()->transform(function ($item, $index) use ($product) {
-        $item->auto_number = $index + 1 + ($product->currentPage() - 1) * $product->perPage();
-        return $item;
-    });
-
-    $loading = $product->isEmpty();
-
-    $singleData = Brand::query()
-        ->where('uuid', $brand)
-        ->firstOrFail();
-
-    return view('admin.products.index', compact('loading', 'product', 'singleData'));
-}
 
     /**
      * Store a newly created resource in storage.
@@ -93,7 +93,7 @@ class ProductController extends Controller
 
             $data = $request->except(['_token', '_method']);
 
-             Product::create([
+            Product::create([
                 'uuid' => $this->encodeIdToString(rand(0, 999999)),
                 'name' => $data['name'],
                 'name_khmer' => $data['name_khmer'],
@@ -126,16 +126,16 @@ class ProductController extends Controller
             ->where('uuid', $productId)
             ->where('brand_id', $brandId) // Assuming a 'brand_id' foreign key
             ->first();
-            return response()->json([
-                'success' => true,
-                'data' => $product
-            ]);
+        return response()->json([
+            'success' => true,
+            'data' => $product
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$brandId, $productId)
+    public function update(Request $request, $brandId, $productId)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -179,8 +179,7 @@ class ProductController extends Controller
                 'success' => true,
                 'message' => 'Product Updated Successfully'
             ]);
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error creating product: ' . $e->getMessage()
