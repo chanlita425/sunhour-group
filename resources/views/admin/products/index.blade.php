@@ -227,8 +227,8 @@
                         </div>
                         <!-- Description Input -->
                         <div class="form-group w-full space-y-2">
-                            <label for="description" class="text-gray-500 text-[12px]">Description</label>
-                            <textarea name="description" rows="4"
+                            <label for="add_description" class="text-gray-500 text-[12px]">Description</label>
+                            <textarea name="description" id="add_description" rows="4"
                                 class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"
                                 placeholder="Enter description (optional)"></textarea>
                         </div>
@@ -333,11 +333,24 @@
         </div>
     </div>
 
-    <!-- Add this script at the bottom of your content section -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
-        {{--Store--}}
+        let addEditorInstance = null;
+        let editEditorInstance = null;
+
+        ClassicEditor.create(document.querySelector('#add_description'))
+            .then(editor => { addEditorInstance = editor; })
+            .catch(error => { console.error(error); });
+
+        ClassicEditor.create(document.querySelector('#edit_description'))
+            .then(editor => { editEditorInstance = editor; })
+            .catch(error => { console.error(error); });
+
         document.getElementById('brandFormAdd').addEventListener('submit', function(e) {
             e.preventDefault();
+            if (addEditorInstance) {
+                document.getElementById('add_description').value = addEditorInstance.getData();
+            }
 
             let formData = new FormData(this);
 
@@ -428,13 +441,20 @@
                         document.getElementById('name_chinese').value = data.data.name_chinese || '';
                         document.getElementById('status').value = data.data.status || 0;
                         document.getElementById('link').value = data.data.link || '';
-                        document.getElementById('edit_description').value = data.data.description || '';
+                        if (editEditorInstance) {
+                            editEditorInstance.setData(data.data.description || '');
+                        } else {
+                            document.getElementById('edit_description').value = data.data.description || '';
+                        }
 
                         const brandForm = document.getElementById('brandFormEdit');
 
                         // Remove previous listeners and add new submit handler
                         const handleSubmit = async function(e) {
                             e.preventDefault();
+                            if (editEditorInstance) {
+                                document.getElementById('edit_description').value = editEditorInstance.getData();
+                            }
                             const formData = new FormData(this);
 
                             try {
@@ -569,5 +589,7 @@
             document.getElementById('formAdd').classList.remove('hidden');
             document.getElementById('formEdit').classList.add('hidden');
         }
+
+        
     </script>
 @endsection
