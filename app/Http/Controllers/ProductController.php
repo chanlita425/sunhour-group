@@ -102,6 +102,7 @@ class ProductController extends Controller
                 'status' => $data['status'],
                 'link' => $data['link'],
                 'brand_id' => $data['brand_id'],
+                'description' => $data['description'] ?? null,
             ]);
 
             return response()->json([
@@ -172,7 +173,8 @@ class ProductController extends Controller
                 'slug' => Str::slug($request->name),
                 'status' => $data['status'],
                 'link' => $data['link'],
-                'brand_id' => $data['brand_id']
+                'brand_id' => $data['brand_id'],
+                'description' => $data['description'] ?? null,
             ]);
 
             return response()->json([

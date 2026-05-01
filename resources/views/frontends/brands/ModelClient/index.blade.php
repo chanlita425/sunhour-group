@@ -386,11 +386,10 @@
                     {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'ម៉ាស៊ីនបោកអេកូ' : 'fa dsaf asd') }}
                 @endif --}}
 
-                <p class="text-black mt-2">
-                    Water Purifier Cambodia is essential for ensuring safe and clean drinking water in homes and businesses. With increasing concerns about water quality, installing a reliable water filter system helps remove impurities and protect your health.
-                </p>
+                @if(!empty($products->description))
+                    <p class="text-black mt-2">{{ $products->description }}</p>
+                @endif
             </div>
-          
 
             <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 justify-center xl:justify-start gap-[10px] md:gap-[15px] pb-[10rem]">
                 @foreach ($model as $models)

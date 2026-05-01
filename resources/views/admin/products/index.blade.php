@@ -225,6 +225,13 @@
                                        placeholder="https://placehold.co/100x100">
                             </label>
                         </div>
+                        <!-- Description Input -->
+                        <div class="form-group w-full space-y-2">
+                            <label for="description" class="text-gray-500 text-[12px]">Description</label>
+                            <textarea name="description" rows="4"
+                                class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"
+                                placeholder="Enter description (optional)"></textarea>
+                        </div>
 
                         <!-- Submit Button -->
                         <button
@@ -297,6 +304,13 @@
                                        class="w-full outline-none bg-transparent"
                                        placeholder="https://placehold.co/100x100">
                             </label>
+                        </div>
+                        <!-- Description Input -->
+                        <div class="form-group w-full space-y-2">
+                            <label for="edit_description" class="text-gray-500 text-[12px]">Description</label>
+                            <textarea name="description" id="edit_description" rows="4"
+                                class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"
+                                placeholder="Enter description (optional)"></textarea>
                         </div>
 
                         <!-- Submit Button -->
@@ -414,6 +428,7 @@
                         document.getElementById('name_chinese').value = data.data.name_chinese || '';
                         document.getElementById('status').value = data.data.status || 0;
                         document.getElementById('link').value = data.data.link || '';
+                        document.getElementById('edit_description').value = data.data.description || '';
 
                         const brandForm = document.getElementById('brandFormEdit');
 

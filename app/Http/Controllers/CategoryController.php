@@ -129,6 +129,7 @@ class CategoryController extends Controller
                 'slug' => Str::slug($request->name),
                 'product_id' => $data['product_id'],
                 'link' => $data['link'],
+                'description' => $data['description'] ?? null,
             ]);
 
             return response()->json([
@@ -192,7 +193,8 @@ class CategoryController extends Controller
                 'name' => $data['name'],
                 'slug' => Str::slug($request->name),
                 'product_id' => $data['product_id'],
-                'link' => $data['link']
+                'link' => $data['link'],
+                'description' => $data['description'] ?? null,
             ]);
 
             return response()->json([

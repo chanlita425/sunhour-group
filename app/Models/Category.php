@@ -14,7 +14,7 @@ class Category extends Model
     protected $casts = [
         'uuid' => 'string',  // Ensure uuid is cast to a string
     ];
-    protected $fillable = ['uuid','name','product_id','link', 'slug'];
+    protected $fillable = ['uuid','name','product_id','link', 'slug', 'description'];
 
     public function products()
     {
