@@ -45,7 +45,7 @@
         </div>
         <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
             <h1 class="text-center font-medium text-[30px] p-5">@lang('message.product')</h1>
-            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] pb-[10rem] md:pb-[11rem]  lg:pb-[3rem] p-3 md:p-0">
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] p-3 md:p-0">
                 @foreach($product as $item)
                     @if($item->status === 1)
                         <a href="{{ route('category.show', [$brands->slug, $item->slug]) }}" class="group transition-all duration-150 ease-in-out">
@@ -53,7 +53,7 @@
                                 @if(empty($item->link))
                                     <img loading="lazy" src="https://placehold.co/500x330" alt="" class="w-full lg:w-[400px] h-full mx-auto object-center object-cover ">
                                 @else
-                                    <img loading="lazy" class="w-full h-full mx-auto object-center {{ $brands->uuid !== 'bXRMSTQ3OC0y' && $brands->uuid !== 'OVhQd3B1dy0x' && $brands->uuid !== 'NWpEWGJUWi0z' && $brands->uuid !== 'ZG56bDFzUS00' ? 'object-cover' : 'object-cover' }} group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
+                                    <img loading="lazy" class="w-full h-full mx-auto object-center object-cover group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
                                          src="{{$item->link}}" alt="{{$item->name}}">
                                 @endif
                             </div>
@@ -70,7 +70,7 @@
                                 @if(empty($item->link))
                                     <img loading="lazy" src="https://placehold.co/500x330" alt="" class="w-full lg:w-[400px] h-full mx-auto object-center object-cover ">
                                 @else
-                                    <img loading="lazy" class="w-full h-full mx-auto object-center {{ $brands->uuid !== 'bXRMSTQ3OC0y' && $brands->uuid !== 'OVhQd3B1dy0x' && $brands->uuid !== 'NWpEWGJUWi0z' && $brands->uuid !== 'ZG56bDFzUS00' ? 'object-cover' : 'object-cover' }} group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
+                                    <img loading="lazy" class="w-full h-full mx-auto object-center object-cover group-hover:scale-[1.04] transition-all duration-300 ease-in-out"
                                          src="{{$item->link}}" alt="{{$item->name}}">
                                 @endif
                             </div>
@@ -83,10 +83,53 @@
                     @endif
                 @endforeach
             </div>
+
+            {{-- FAQ Section --}}
+            @if(isset($faqs) && $faqs->isNotEmpty())
+                <div class="mt-[5rem] pb-[10rem]">
+                    <h2 class="text-black text-xl font-medium my-4">Frequently Asked Questions</h2>
+                    <div class="space-y-3">
+                        @foreach($faqs as $index => $faq)
+                            @php
+                                $locale   = app()->getLocale();
+                                $question = $locale === 'km' ? $faq->q_khmer : ($locale === 'zh' ? $faq->q_china : $faq->q_english);
+                                $answer   = $locale === 'km' ? $faq->a_khmer : ($locale === 'zh' ? $faq->a_china : $faq->a_english);
+                            @endphp
+                            @if(!empty($question))
+                                <div class="border border-gray-200 rounded-sm overflow-hidden">
+                                    <button type="button" onclick="toggleFaq('faq-{{ $index }}')"
+                                        class="w-full flex items-center justify-between px-4 py-3 text-left bg-white hover:bg-gray-50 transition-colors duration-150">
+                                        <span class="text-sm font-medium text-black">{{ $question }}</span>
+                                        <svg id="faq-icon-{{ $index }}" class="w-4 h-4 text-gray-500 shrink-0 transition-transform duration-200"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M6 9l6 6 6-6"/>
+                                        </svg>
+                                    </button>
+                                    <div id="faq-{{ $index }}" class="hidden px-4 pb-4 bg-white">
+                                        <p class="text-sm text-gray-600">{{ $answer }}</p>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <div class="pb-[10rem]"></div>
+            @endif
         </div>
 
         <footer class="absolute inset-x-0 bottom-0 bg-black py-1">
             <p class="text-white text-[12px] text-center"> © Copyright 2024 SUNHOUR GROUP, All Rights Reserved</p>
         </footer>
     </div>
+    <script>
+        function toggleFaq(id) {
+            const panel = document.getElementById(id);
+            const index = id.replace('faq-', '');
+            const icon  = document.getElementById('faq-icon-' + index);
+            panel.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
 @endsection

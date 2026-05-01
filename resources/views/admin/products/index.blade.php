@@ -157,7 +157,7 @@
             </div>
 
             {{-- form to add new brand --}}
-            <div id="formAdd" class="col-span-4 xl:col-span-3 w-full pr-5">
+            <div id="formAdd" class="col-span-4 xl:col-span-3 w-full pr-5 h-[75vh] xl:h-[85vh] overflow-y-auto">
                 <form action="{{ route('products.store', $singleData->uuid) }}" method="POST" class="w-full bg-white rounded-lg p-5" id="brandFormAdd">
                     @csrf
                     <div x-data="{
@@ -226,7 +226,7 @@
                             </label>
                         </div>
                         <!-- Description Input -->
-                        <div class="form-group w-full space-y-2">
+                        <div class="form-group w-full space-y-2 overflow-hidden">
                             <label for="add_description" class="text-gray-500 text-[12px]">Description</label>
                             <textarea name="description" id="add_description" rows="4"
                                 class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"
@@ -244,7 +244,7 @@
                     </div>
                 </form>
             </div>
-            <div id="formEdit" class="hidden col-span-4 xl:col-span-3 w-full pr-5">
+            <div id="formEdit" class="hidden col-span-4 xl:col-span-3 w-full pr-5 h-[75vh] xl:h-[85vh] overflow-y-auto">
                 <form method="POST" class="w-full bg-white rounded-lg p-5" id="brandFormEdit">
                     @csrf
                     @method('PUT')
@@ -306,7 +306,7 @@
                             </label>
                         </div>
                         <!-- Description Input -->
-                        <div class="form-group w-full space-y-2">
+                        <div class="form-group w-full space-y-2 overflow-hidden">
                             <label for="edit_description" class="text-gray-500 text-[12px]">Description</label>
                             <textarea name="description" id="edit_description" rows="4"
                                 class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"

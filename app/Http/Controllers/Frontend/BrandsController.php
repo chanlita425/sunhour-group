@@ -17,6 +17,7 @@ use App\Models\Admin\Brand;
 use App\Models\Admin\Product;
 use App\Models\Admin\Models;
 use App\Models\Admin\Space;
+use App\Models\FAQs;
 use Artesaos\SEOTools\Facades\SEOTools;
 
 class BrandsController extends Controller
@@ -70,7 +71,11 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        return view('frontends.brands.show', compact('brands', 'product'));
+        // Get FAQs linked to any product of this brand
+        $productUuids = $product->pluck('uuid')->toArray();
+        $faqs = FAQs::whereIn('product_id', $productUuids)->get();
+
+        return view('frontends.brands.show', compact('brands', 'product', 'faqs'));
     }
 
     // public function category($brand, $product)
@@ -119,7 +124,9 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        return view('frontends.details', compact('brands', 'products', 'category'));
+        $faqs = FAQs::where('product_id', $products->uuid)->get();
+
+        return view('frontends.details', compact('brands', 'products', 'category', 'faqs'));
     }
 
 

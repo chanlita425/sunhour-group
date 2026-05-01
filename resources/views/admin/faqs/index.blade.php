@@ -89,13 +89,31 @@
                 </div>
             </div>
 
-            <div id="formAdd" class="col-span-4 xl:col-span-3 w-full pr-5 space-y-4">
+            <div id="formAdd" class="col-span-4 xl:col-span-3 w-full pr-5 space-y-4 h-[75vh] xl:h-[85vh] overflow-y-auto">
                 <h1 class="font-bold">Add FAQs</h1>
                 <form action="" method="POST" class="w-full bg-white rounded-lg p-2" id="brandForm">
                     @csrf
                     <div class="space-y-4">
+                        <!-- Brand -->
+                        <div class="form-group w-full space-y-2">
+                            <label class="text-gray-500 text-[12px]">Brand</label>
+                            <select id="add_brand" onchange="filterByBrand('add')"
+                                class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300">
+                                <option value="">— Select Brand —</option>
+                                @foreach($brands as $b)
+                                    <option value="{{ $b->uuid }}">{{ $b->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <!-- Product / Category -->
+                        <div class="form-group w-full space-y-2">
+                            <label class="text-gray-500 text-[12px]">Product / Category</label>
+                            <select name="product_id" id="add_product_id"
+                                class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300">
+                                <option value="">— Select Brand first —</option>
+                            </select>
+                        </div>
                         {{-- Q&A of English --}}
-                        <!-- Brand Input -->
                         <h1>Q&A of English</h1>
                         <div class="form-group w-full space-y-2">
                             <label for="name" class="text-gray-500 text-[12px]">Question</label>
@@ -148,11 +166,31 @@
                     </div>
                 </form>
             </div>
-            <div id="formEdit" class="hidden col-span-4 xl:col-span-3 w-full pr-5">
+            <div id="formEdit" class="hidden col-span-4 xl:col-span-3 w-full pr-5 h-[75vh] xl:h-[85vh] overflow-y-auto">
                 <h1 class="font-bold">Edit FAQs</h1>
                 <form method="POST" class="w-full bg-white rounded-lg p-5 space-y-4" id="brandFormEdit">
                     @csrf
                     @method('PUT')
+
+                    <!-- Brand -->
+                    <div class="form-group w-full space-y-2">
+                        <label class="text-gray-500 text-[12px]">Brand</label>
+                        <select id="edit_brand" onchange="filterByBrand('edit')"
+                            class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300">
+                            <option value="">— Select Brand —</option>
+                            @foreach($brands as $b)
+                                <option value="{{ $b->uuid }}">{{ $b->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Product / Category -->
+                    <div class="form-group w-full space-y-2">
+                        <label class="text-gray-500 text-[12px]">Product / Category</label>
+                        <select name="product_id" id="edit_product_id"
+                            class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300">
+                            <option value="">— Select Brand first —</option>
+                        </select>
+                    </div>
 
                     <h1 class="font-bold">Q&A of English</h1>
 
@@ -336,6 +374,20 @@
 
                     if (data.success) {
                         // Populate form fields
+                        const savedId = data.data.product_id || '';
+                        // find brand of the saved product_id
+                        const matchedProduct = allProducts.find(p => p.uuid === savedId);
+                        const matchedCategory = allCategories.find(c => c.uuid === savedId);
+                        let brandId = '';
+                        if (matchedProduct) {
+                            brandId = matchedProduct.brand_id;
+                        } else if (matchedCategory) {
+                            const parentProduct = allProducts.find(p => p.uuid === matchedCategory.product_id);
+                            if (parentProduct) brandId = parentProduct.brand_id;
+                        }
+                        document.getElementById('edit_brand').value = brandId;
+                        filterByBrand('edit');
+                        document.getElementById('edit_product_id').value = savedId;
                         document.getElementById('edit_q_english').value = data.data.q_english || '';
                         document.getElementById('edit_a_english').value = data.data.a_english || '';
                         document.getElementById('edit_q_khmer').value = data.data.q_khmer || '';
@@ -480,6 +532,47 @@
                 });
             });
         });
+
+        // Brand → Product/Category cascade
+        const allProducts   = @json($products);
+        const allCategories = @json($categories);
+
+        function filterByBrand(prefix) {
+            const brandId       = document.getElementById(prefix + '_brand').value;
+            const productSelect = document.getElementById(prefix + '_product_id');
+            productSelect.innerHTML = '<option value="">— Select Product / Category —</option>';
+
+            if (!brandId) {
+                productSelect.innerHTML = '<option value="">— Select Brand first —</option>';
+                return;
+            }
+
+            const filteredProducts    = allProducts.filter(p => p.brand_id === brandId);
+            const filteredProductUuids = filteredProducts.map(p => p.uuid);
+            const filteredCategories  = allCategories.filter(c => filteredProductUuids.includes(c.product_id));
+
+            if (filteredProducts.length) {
+                const pg = document.createElement('optgroup');
+                pg.label = 'Products';
+                filteredProducts.forEach(p => {
+                    const o = document.createElement('option');
+                    o.value = p.uuid; o.textContent = p.name;
+                    pg.appendChild(o);
+                });
+                productSelect.appendChild(pg);
+            }
+
+            if (filteredCategories.length) {
+                const cg = document.createElement('optgroup');
+                cg.label = 'Categories';
+                filteredCategories.forEach(c => {
+                    const o = document.createElement('option');
+                    o.value = c.uuid; o.textContent = c.name;
+                    cg.appendChild(o);
+                });
+                productSelect.appendChild(cg);
+            }
+        }
 
         // Redefine onCancel for clarity
         function onCancel() {
