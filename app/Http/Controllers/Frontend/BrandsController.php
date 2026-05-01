@@ -31,7 +31,7 @@ class BrandsController extends Controller
         // SEO metadata
         SEOTools::setTitle(__('message.brand') . ' | ');
         SEOTools::setDescription(
-            "Discover {$brandNames} Water Purifier, Bath Tub Cambodia, Water Purified ,Water Pump, Faucet Cambodia, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet,Heat Pump,Water Dispenser Cambodia,Water Filter Cambodia, Water Heating System, Bathroom Equipment in Cambodia’s high-quality water heating systems. From energy-saving heat pumps and solar water solutions to home shower units and storage water heaters, we have the perfect hot water solution for every home."
+            "Discover {$brandNames} Water Purifier and Water Filter Cambodia solutions for safe home drinking water. Sun Hour provides Purepro systems and water purified technology for residential and commercial use."
         );
         // Canonical & Social Meta
         $locale = app()->getLocale();
@@ -54,14 +54,14 @@ class BrandsController extends Controller
         // Get all products for this brand
         $product = Product::where('brand_id', $brands->uuid)->get();
 
-        // Extract all product images for Open Graph
+        // Extract all product images for Open Graph 
         $images = $product->pluck('link')->filter()->toArray();
 
         //  Dynamic SEO
         // $title = $brands->name . " Cambodia | " . __('message.product') . " - ";
         $title =  __('message.product') . " - ";
         $description = $brands->description ?? "Discover {$brands->name}, Bath Tub Cambodia, Water Purifier, Faucet Cambodia, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet,Heat Pump,Water Dispenser Cambodia, Water Filter Cambodia, Bathroom Equipment, Water Heating System in Cambodia’s high-quality water heating systems. From energy-saving heat pumps and solar water solutions to home shower units and storage water heaters, we have the perfect hot water solution for every home.";
-         $locale = app()->getLocale();
+        $locale = app()->getLocale();
         SEOTools::setTitle($title);
         SEOTools::setDescription($description);
         SEOTools::opengraph()->setUrl(route('brands-client.show', [$brands->slug, 'locale' => $locale]));

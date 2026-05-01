@@ -14,7 +14,7 @@
         <div class="w-full max-w-screen-xl mx-auto mt-[5rem] xl:mt-[10rem] px-3 md:px-5">
             @if($products->uuid === 'MHFMay0zMjM5OTI=')
                 <img alt="" src="https://www.toto.com/global_common_2019/index/images/img-pro-neorest.jpg"
-                     class="h-[40vh] w-full object-cover" />
+                    class="h-[40vh] w-full object-cover" />
             @elseif(
                 $brands->uuid === 'eTRFTWZVeS01')
                 <img
@@ -371,19 +371,26 @@
                 />
             @else
                 <img loading="lazy" alt="" src="https://asia.toto.com/products/ecowasher/images/b.%20Washlets_ecowasher.jpg"
-                     class="w-full h-[40vh]  object-cover" />
+                    class="w-full h-[40vh]  object-cover" />
             @endif
         </div>
         <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="text-black text-2xl font-medium my-[3rem] capitalize">
+            <div class="my-[3rem]" >
+                <p class="text-black text-2xl font-medium capitalize">  
                     {{ str_replace('-', ' ', $categories ?? (app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese))) }}
+                </p>
+                
+                {{-- @if ($products->slug === 'smart-toilet')
+                    {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'បង្គន់អនាម័យឆ្លាតវៃ' : 'fafdsa ch') }}
+                @elseif( $products->slug === 'washlet' )
+                    {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'ម៉ាស៊ីនបោកអេកូ' : 'fa dsaf asd') }}
+                @endif --}}
 
-                    {{-- @if ($products->slug === 'smart-toilet')
-                        {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'បង្គន់អនាម័យឆ្លាតវៃ' : 'fafdsa ch') }}
-                    @elseif( $products->slug === 'washlet' )
-                        {{ app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? 'ម៉ាស៊ីនបោកអេកូ' : 'fa dsaf asd') }}
-                    @endif --}}
-            </h1>
+                <p class="text-black mt-2">
+                    Water Purifier Cambodia is essential for ensuring safe and clean drinking water in homes and businesses. With increasing concerns about water quality, installing a reliable water filter system helps remove impurities and protect your health.
+                </p>
+            </div>
+          
 
             <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 justify-center xl:justify-start gap-[10px] md:gap-[15px] pb-[10rem]">
                 @foreach ($model as $models)

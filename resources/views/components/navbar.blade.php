@@ -94,7 +94,7 @@
                     </li>   
                     <li
                         class="group
-                    hover:border-b-4 border-[#3b83db] py-4 transition-all duration-300 ease-in-out">
+                        hover:border-b-4 border-[#3b83db] py-4 transition-all duration-300 ease-in-out">
                         <button id="product"
                             class=" text-white text-[14px] font-light {{ session()->get('locale') === 'en' ? '  lg:text-[14px] xl:text-[18px]' : 'lg:text-[12px] xl:text-[14px]' }}">@lang('message.product')
                         </button>
@@ -294,7 +294,7 @@
                         {{ session()->get('locale') === 'en' ? '  lg:text-[14px] xl:text-[18px]' : 'lg:text-[12px] xl:text-[14px]' }}
                         ">@lang('message.contact')</a>
                     </li>
-                    <li
+                    {{-- <li
                         class="{{ Route::is('faqs.index') ? 'border-b-4' : '' }}
                     hover:border-b-4 border-[#3b83db] py-4 transition-all duration-300 ease-in-out">
                         <a href="{{ route('faqs', ['locale' => $locale]) }}"
@@ -303,8 +303,8 @@
                         ">
                         {{ app()->getLocale() === 'en' ? 'FAQs' : (app()->getLocale() === 'km' ? 'សំណួរដែលសួរញឹកញាប់' : 'FAQs') }}
                     </a>
-                    </li>
-                    <li
+                    </li> --}}
+                    {{-- <li
                         class="{{ Route::is('articles') ? 'border-b-4' : '' }}
                     hover:border-b-4 border-[#3b83db] py-4 transition-all duration-300 ease-in-out">
                         <a href="{{ route('articles', ['locale' => $locale]) }}"
@@ -313,7 +313,7 @@
                         ">
                             {{ app()->getLocale() === 'en' ? 'Article' : (app()->getLocale() === 'km' ? 'អត្ថបទ' : 'Article') }}
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <div class="w-full 2xl:w-[80%] imac-screen" style="">
                             <form action="{{ route('search.index') }}" method="GET"
