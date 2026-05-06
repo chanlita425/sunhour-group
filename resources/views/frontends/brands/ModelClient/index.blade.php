@@ -433,7 +433,7 @@
             {{-- FAQ Section --}}
             @if(isset($faqs) && $faqs->isNotEmpty())
                 <div class="my-[3rem]">
-                    <h2 class="text-black text-xl font-medium my-5">Frequently Asked Questions*</h2>
+                    <h2 class="text-black text-xl font-medium my-4">Frequently Asked Questions</h2>
                     <div class="space-y-3 pb-[10rem]">
                         @foreach($faqs as $index => $faq)
                             @php

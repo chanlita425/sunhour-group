@@ -71,9 +71,10 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        // Get FAQs linked to any product of this brand
-        $productUuids = $product->pluck('uuid')->toArray();
-        $faqs = FAQs::whereIn('product_id', $productUuids)->get();
+        // Brand-level FAQs: brand_id matches, no specific product (display_type = brand)
+        $faqs = FAQs::where('brand_id', $brands->uuid)
+            ->whereNull('product_id')
+            ->get();
 
         return view('frontends.brands.show', compact('brands', 'product', 'faqs'));
     }
@@ -184,7 +185,14 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        return view('frontends.brands.ModelClient.index', compact('products', 'brands', 'model', 'category'));
+        // Model-level FAQs: brand_id matches + product_id matches the actual product
+        // $products may be a Category — resolve the real product UUID for the FAQ lookup
+        $productUuidForFaq = $category ? $category->product_id : $products->uuid;
+        $faqs = FAQs::where('brand_id', $brands->uuid)
+            ->where('product_id', $productUuidForFaq)
+            ->get();
+
+        return view('frontends.brands.ModelClient.index', compact('products', 'brands', 'model', 'category', 'faqs'));
     }
 
     // public function model_category($brand, $product, $categories)
@@ -241,7 +249,12 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        return view('frontends.brands.ModelClient.index', compact('products', 'category', 'brands', 'model'));
+        // Model-level FAQs for this category's parent product
+        $faqs = FAQs::where('brand_id', $brands->uuid)
+            ->where('product_id', $category->product_id)
+            ->get();
+
+        return view('frontends.brands.ModelClient.index', compact('products', 'category', 'brands', 'model', 'faqs'));
     }
 
     public function model_details($brand, $products, $model)

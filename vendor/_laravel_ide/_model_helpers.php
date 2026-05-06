@@ -4374,6 +4374,8 @@ namespace App\Models {
     /**
      * App\Models\FAQs
      *
+     * @property string|null $category_id
+     * @property string|null $brand_id
      * @property string|null $product_id
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
@@ -4384,6 +4386,10 @@ namespace App\Models {
      * @property string $a_english
      * @property string $q_english
      * @property int $id
+     * @property-read mixed $display_level
+     * @property-read \App\Models\Admin\Brand $brand
+     * @property-read \App\Models\Category $category
+     * @property-read \App\Models\Admin\Product $product
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereQEnglish($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereAEnglish($value)
@@ -4394,6 +4400,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereProductId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereBrandId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereCategoryId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs query()
