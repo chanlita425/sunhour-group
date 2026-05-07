@@ -11,7 +11,7 @@ class Brand extends Model
     protected $casts = [
         'uuid' => 'string',  // Ensure uuid is cast to a string
     ];
-    protected $fillable = ['uuid','name','logoSvg', 'slug'];
+    protected $fillable = ['uuid','name','logoSvg', 'slug', 'description'];
 
     public function products()
     {

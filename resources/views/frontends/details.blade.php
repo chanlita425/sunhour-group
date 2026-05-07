@@ -96,9 +96,12 @@
         </div>
 
         <section class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="font-medium text-[30px] p-5">
+            <h1 class="font-medium text-[20px] md:text-[22px] lg:text-[35px] xl:text-[35px] p-5">
                 {{ app()->getLocale() == 'en' ? $products->name : (app()->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese) }}
             </h1>
+            @if(!empty($products->description))
+                <div class="text-black px-5 mb-4">{!! $products->description !!}</div>
+            @endif
 
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] p-3 md:p-0">
                 @foreach($category as $item)
@@ -133,35 +136,35 @@
 
             {{-- FAQ Section --}}
             @if(isset($faqs) && $faqs->isNotEmpty())
-                <div class="mt-[3rem] pb-[10rem]">
-                    <h2 class="text-black text-xl font-medium mb-5">Frequently Asked Questions</h2>
-                    <div class="space-y-3">
-                        @foreach($faqs as $index => $faq)
-                            @php
-                                $locale = app()->getLocale();
-                                $question = $locale === 'km' ? $faq->q_khmer : ($locale === 'zh' ? $faq->q_china : $faq->q_english);
-                                $answer   = $locale === 'km' ? $faq->a_khmer : ($locale === 'zh' ? $faq->a_china : $faq->a_english);
-                            @endphp
-                            @if(!empty($question))
-                                <div class="border border-gray-200 rounded-sm overflow-hidden">
-                                    <button type="button"
-                                        onclick="toggleFaq('faq-{{ $index }}')"
-                                        class="w-full flex items-center justify-between px-4 py-3 text-left bg-white hover:bg-gray-50 transition-colors duration-150">
-                                        <span class="text-sm font-medium text-black">{{ $question }}</span>
-                                        <svg id="faq-icon-{{ $index }}" class="w-4 h-4 text-gray-500 shrink-0 transition-transform duration-200"
-                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M6 9l6 6 6-6"/>
-                                        </svg>
-                                    </button>
-                                    <div id="faq-{{ $index }}" class="hidden px-4 pb-4 bg-white">
-                                        <p class="text-sm text-gray-600">{{ $answer }}</p>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
+            <div class="my-[3rem] max-w-full mx-auto">
+                <h2 class="text-black text-xl font-medium my-4 text-center">Frequently Asked Questions</h2>
+                <div class="flex flex-col gap-2 pb-[10rem]">
+                    @foreach($faqs as $index => $faq)
+                        @php
+                            $locale = app()->getLocale();
+                            $question = $locale === 'km' ? $faq->q_khmer : ($locale === 'zh' ? $faq->q_china : $faq->q_english);
+                            $answer   = $locale === 'km' ? $faq->a_khmer : ($locale === 'zh' ? $faq->a_china : $faq->a_english);
+                        @endphp
+                        @if(!empty($question))
+                            <button type="button"
+                                onclick="selectFaq({{ $index }}, this)"
+                                id="faq-btn-{{ $index }}"
+                                class="faq-btn w-full flex items-center justify-between px-4 py-3 text-left bg-white transition-colors duration-150"
+                                style="border: 0.5px solid #B5D4F4; border-left: 3px solid #378ADD;">
+                                <span class="text-sm font-medium faq-label" style="color: #000;">{{ $question }}</span>
+                                <svg class="faq-arrow w-4 h-4 shrink-0" style="color: #378ADD;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 18l6-6-6-6"/>
+                                </svg>
+                            </button>
+                            <div id="faq-panel-{{ $index }}" class="hidden px-4 py-3"
+                                style="background:#B5D4F4; border: 0.5px solid #85B7EB; border-left: 3px solid #185FA5; border-top: none;">
+                                <p class="text-sm leading-relaxed" style="color: #0C447C;">{{ $answer }}</p>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
+            </div>
             @else
                 <div class="pb-[10rem]"></div>
             @endif
@@ -172,12 +175,49 @@
         </footer>
     </div>
     <script>
-        function toggleFaq(id) {
-            const panel = document.getElementById(id);
-            const index = id.replace('faq-', '');
-            const icon = document.getElementById('faq-icon-' + index);
-            panel.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
+let activeFaq = null;
+
+function selectFaq(index, btn) {
+    if (activeFaq !== null && activeFaq !== index) {
+        const prev = document.getElementById('faq-btn-' + activeFaq);
+        prev.style.background = '#ffffff';
+        prev.style.borderColor = '#B5D4F4';
+        prev.style.borderLeftColor = '#378ADD';
+        prev.querySelector('.faq-label').style.color = '#000';
+        prev.querySelector('.faq-arrow').style.color = '#378ADD';
+        document.getElementById('faq-panel-' + activeFaq).classList.add('hidden');
+    }
+
+    if (activeFaq === index) {
+        btn.style.background = '#ffffff';
+        btn.style.borderColor = '#B5D4F4';
+        btn.style.borderLeftColor = '#378ADD';
+        btn.querySelector('.faq-label').style.color = '#000';
+        btn.querySelector('.faq-arrow').style.color = '#378ADD';
+        document.getElementById('faq-panel-' + index).classList.add('hidden');
+        activeFaq = null;
+    } else {
+        btn.style.background = '#185FA5';
+        btn.style.borderColor = '#185FA5';
+        btn.style.borderLeftColor = '#0C447C';
+        btn.querySelector('.faq-label').style.color = '#E6F1FB';
+        btn.querySelector('.faq-arrow').style.color = '#B5D4F4';
+        document.getElementById('faq-panel-' + index).classList.remove('hidden');
+        activeFaq = index;
+    }
+}
+
+document.querySelectorAll('.faq-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+        if (btn !== document.getElementById('faq-btn-' + activeFaq)) {
+            btn.style.background = '#f3f4f6';
         }
+    });
+    btn.addEventListener('mouseleave', () => {
+        if (btn !== document.getElementById('faq-btn-' + activeFaq)) {
+            btn.style.background = '#ffffff';
+        }
+    });
+});
     </script>
 @endsection

@@ -19,11 +19,7 @@ class FAQsController extends Controller
         }
 
         if ($request->filled('filter_type')) {
-            if ($request->filter_type === 'model') {
-                $query->whereNotNull('product_id');
-            } else {
-                $query->whereNull('product_id');
-            }
+            $query->where('faq_type', $request->filter_type);
         }
 
         $data       = $query->paginate(30)->withQueryString();
@@ -42,11 +38,13 @@ class FAQsController extends Controller
             'a_english' => 'required|string',
         ]);
 
-        // Display logic: category_id set → category level, else → product level
+        $type = $request->faq_type;
+
         $faq = FAQs::create([
+            'faq_type'    => $type,
             'brand_id'    => $request->brand_id,
-            'category_id' => $request->category_id ?: null,
-            'product_id'  => $request->product_id  ?: null,
+            'product_id'  => in_array($type, ['category', 'model']) ? ($request->product_id  ?: null) : null,
+            'category_id' => $type === 'model'                      ? ($request->category_id ?: null) : null,
             'q_english'   => $request->q_english,
             'a_english'   => $request->a_english,
             'q_khmer'     => $request->q_khmer,
@@ -92,10 +90,13 @@ class FAQsController extends Controller
             'a_english' => 'required|string',
         ]);
 
+        $type = $request->faq_type;
+
         $faq->update([
+            'faq_type'    => $type,
             'brand_id'    => $request->brand_id,
-            'category_id' => $request->category_id ?: null,
-            'product_id'  => $request->product_id  ?: null,
+            'product_id'  => in_array($type, ['category', 'model']) ? ($request->product_id  ?: null) : null,
+            'category_id' => $type === 'model'                      ? ($request->category_id ?: null) : null,
             'q_english'   => $request->q_english,
             'a_english'   => $request->a_english,
             'q_khmer'     => $request->q_khmer,

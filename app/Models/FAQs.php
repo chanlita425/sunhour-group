@@ -11,9 +11,10 @@ class FAQs extends Model
     protected $table = 'fa_qs';
 
     protected $fillable = [
+        'faq_type',
         'brand_id',
-        'category_id',
         'product_id',
+        'category_id',
         'q_english', 'a_english',
         'q_khmer', 'a_khmer',
         'q_china', 'a_china',
@@ -35,15 +36,13 @@ class FAQs extends Model
     }
 
     /**
-     * Derive display level:
-     * - product_id set  → 'model'   (shows on model/product page)
-     * - brand_id only   → 'brand'   (shows on brand page)
+     * Display level is driven by the stored faq_type:
+     * - 'brand'    → shows on brand page
+     * - 'category' → shows on product's category listing page
+     * - 'model'    → shows on model listing page
      */
     public function getDisplayLevelAttribute(): string
     {
-        if ($this->product_id) {
-            return 'model';
-        }
-        return 'brand';
+        return $this->faq_type ?? 'brand';
     }
 }

@@ -13,7 +13,7 @@
     <form method="GET" action="{{ route('faqs.index') }}" class="flex flex-wrap items-end gap-3 mb-4 bg-white rounded-lg p-3">
         <div class="flex flex-col gap-1">
             <label class="text-gray-500 text-[11px]">Filter by Brand</label>
-            <select name="filter_brand" id="filter_brand"
+            <select name="filter_brand"
                 class="bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all min-w-[150px]">
                 <option value="">— All Brands —</option>
                 @foreach($brands as $b)
@@ -22,12 +22,13 @@
             </select>
         </div>
         <div class="flex flex-col gap-1">
-            <label class="text-gray-500 text-[11px]">Filter by Display</label>
+            <label class="text-gray-500 text-[11px]">Filter by Type</label>
             <select name="filter_type"
                 class="bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all min-w-[150px]">
                 <option value="">— All Types —</option>
-                <option value="brand" {{ request('filter_type') == 'brand' ? 'selected' : '' }}>Brand Page</option>
-                <option value="model" {{ request('filter_type') == 'model' ? 'selected' : '' }}>Model Page</option>
+                <option value="brand"    {{ request('filter_type') == 'brand'    ? 'selected' : '' }}>Brand Page</option>
+                <option value="category" {{ request('filter_type') == 'category' ? 'selected' : '' }}>Category Page</option>
+                <option value="model"    {{ request('filter_type') == 'model'    ? 'selected' : '' }}>Model Page</option>
             </select>
         </div>
         <button type="submit" class="bg-blue-500 text-white px-4 py-1.5 rounded-sm text-[12px] hover:bg-blue-600 transition-all">
@@ -51,7 +52,7 @@
                     <tr class="text-gray-500 border-gray-200">
                         <th class="w-8">#</th>
                         <th class="w-24">Brand</th>
-                        <th class="w-28">Shows On</th>
+                        <th class="w-36">Shows On</th>
                         <th class="w-auto">Question (English)</th>
                         <th class="w-auto">Answer</th>
                         <th class="w-16 text-end">Action</th>
@@ -75,16 +76,25 @@
                                 <td class="whitespace-nowrap">{{ $brands->firstWhere('uuid', $item->brand_id)?->name ?? '—' }}</td>
 
                                 <td>
-                                    @if($item->display_level === 'model')
+                                    @if($item->faq_type === 'model')
                                         <span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
-                                            {{-- model icon --}}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                                             Model Page
+                                        </span>
+                                        <span class="block text-gray-400 text-[10px] mt-0.5">
+                                            {{ $products->firstWhere('uuid', $item->product_id)?->name ?? '—' }}
+                                            @if($item->category_id)
+                                                / {{ $categories->firstWhere('uuid', $item->category_id)?->name ?? '—' }}
+                                            @endif
+                                        </span>
+                                    @elseif($item->faq_type === 'category')
+                                        <span class="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                                            Category Page
                                         </span>
                                         <span class="block text-gray-400 text-[10px] mt-0.5">{{ $products->firstWhere('uuid', $item->product_id)?->name ?? '—' }}</span>
                                     @else
                                         <span class="inline-flex items-center gap-1 bg-orange-100 text-orange-700 text-[10px] px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
-                                            {{-- brand icon --}}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                                             Brand Page
                                         </span>
@@ -98,7 +108,6 @@
                                     <div class="inline-flex gap-1">
                                         <button data-url="{{ route('faqs.show', $item->id) }}"
                                             data-update-url="{{ route('faqs.update', $item->id) }}"
-                                            data-id="{{ $item->id }}"
                                             class="edit-btn tooltip tooltip-top bg-green-100 text-green-600 p-1.5 rounded-full hover:bg-green-600 hover:text-white transition-all"
                                             data-tip="Edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" stroke-width="2">
@@ -126,7 +135,7 @@
                 </tbody>
             </table>
             <div class="m-3">{{ $data->links('pagination::daisyui') }}</div>
-            </div>{{-- /scroll --}}
+            </div>
         </div>
 
         {{-- ── ADD FORM ── --}}
@@ -135,25 +144,27 @@
             <form id="faqAddForm" class="flex flex-col flex-1 bg-white rounded-lg overflow-hidden min-h-0">
                 @csrf
 
-                {{-- Scrollable area --}}
                 <div class="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
 
-                    {{-- Display type toggle --}}
+                    {{-- Type tabs --}}
                     <div class="space-y-1">
                         <label class="text-gray-500 text-[11px]">Show FAQ On <span class="text-red-500">*</span></label>
                         <div class="flex rounded-sm overflow-hidden border border-gray-200 text-[11px]">
                             <label class="flex-1 text-center cursor-pointer">
-                                <input type="radio" name="display_type" value="brand" class="sr-only" checked onchange="onAddTypeChange()">
-                                <span id="add_tab_brand" class="block py-1.5 bg-blue-500 text-white font-medium transition-all">Brand Page</span>
+                                <input type="radio" name="faq_type" value="brand" class="sr-only" checked onchange="onAddTypeChange()">
+                                <span id="add_tab_brand" class="block py-1.5 bg-blue-500 text-white font-medium transition-all">Brand</span>
                             </label>
                             <label class="flex-1 text-center cursor-pointer">
-                                <input type="radio" name="display_type" value="model" class="sr-only" onchange="onAddTypeChange()">
-                                <span id="add_tab_model" class="block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all">Model Page</span>
+                                <input type="radio" name="faq_type" value="category" class="sr-only" onchange="onAddTypeChange()">
+                                <span id="add_tab_category" class="block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all">Category</span>
+                            </label>
+                            <label class="flex-1 text-center cursor-pointer">
+                                <input type="radio" name="faq_type" value="model" class="sr-only" onchange="onAddTypeChange()">
+                                <span id="add_tab_model" class="block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all">Model</span>
                             </label>
                         </div>
-                        {{-- hint --}}
                         <p id="add_type_hint" class="text-[10px] text-blue-600 bg-blue-50 rounded px-2 py-1">
-                            FAQ will appear on the <strong>Brand</strong> page. Only Brand selection needed.
+                            FAQ appears on the <strong>Brand</strong> page.
                         </p>
                     </div>
 
@@ -169,12 +180,21 @@
                         </select>
                     </div>
 
-                    {{-- Product (Model Page only) --}}
+                    {{-- Product (Category + Model tabs) --}}
                     <div id="add_product_wrap" class="space-y-1 hidden">
                         <label class="text-gray-500 text-[11px]">Product <span class="text-red-500">*</span></label>
-                        <select name="product_id" id="add_product_id"
+                        <select name="product_id" id="add_product_id" onchange="onAddProductChange()"
                             class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all">
                             <option value="">— Select Brand first —</option>
+                        </select>
+                    </div>
+
+                    {{-- Category (Model tab only, optional) --}}
+                    <div id="add_category_wrap" class="space-y-1 hidden">
+                        <label class="text-gray-500 text-[11px]">Category <span class="text-gray-400">(optional)</span></label>
+                        <select name="category_id" id="add_category_id"
+                            class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all">
+                            <option value="">— Select Product first —</option>
                         </select>
                     </div>
 
@@ -223,7 +243,6 @@
                     </div>
 
                 </div>
-                {{-- Submit pinned --}}
                 <div class="shrink-0 p-3 pt-2 border-t border-gray-100 bg-white">
                     <button type="submit" class="w-full bg-blue-500 text-white py-1.5 rounded-sm text-[13px] hover:bg-blue-600 transition-all">
                         Submit
@@ -239,24 +258,27 @@
                 @csrf
                 @method('PUT')
 
-                {{-- Scrollable area --}}
                 <div class="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
 
-                    {{-- Display type toggle --}}
+                    {{-- Type tabs --}}
                     <div class="space-y-1">
                         <label class="text-gray-500 text-[11px]">Show FAQ On <span class="text-red-500">*</span></label>
                         <div class="flex rounded-sm overflow-hidden border border-gray-200 text-[11px]">
                             <label class="flex-1 text-center cursor-pointer">
-                                <input type="radio" name="display_type" value="brand" id="edit_type_brand" class="sr-only" onchange="onEditTypeChange()">
-                                <span id="edit_tab_brand" class="block py-1.5 bg-blue-500 text-white font-medium transition-all">Brand Page</span>
+                                <input type="radio" name="faq_type" value="brand" id="edit_type_brand" class="sr-only" onchange="onEditTypeChange()">
+                                <span id="edit_tab_brand" class="block py-1.5 bg-blue-500 text-white font-medium transition-all">Brand</span>
                             </label>
                             <label class="flex-1 text-center cursor-pointer">
-                                <input type="radio" name="display_type" value="model" id="edit_type_model" class="sr-only" onchange="onEditTypeChange()">
-                                <span id="edit_tab_model" class="block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all">Model Page</span>
+                                <input type="radio" name="faq_type" value="category" id="edit_type_category" class="sr-only" onchange="onEditTypeChange()">
+                                <span id="edit_tab_category" class="block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all">Category</span>
+                            </label>
+                            <label class="flex-1 text-center cursor-pointer">
+                                <input type="radio" name="faq_type" value="model" id="edit_type_model" class="sr-only" onchange="onEditTypeChange()">
+                                <span id="edit_tab_model" class="block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all">Model</span>
                             </label>
                         </div>
                         <p id="edit_type_hint" class="text-[10px] text-blue-600 bg-blue-50 rounded px-2 py-1">
-                            FAQ will appear on the <strong>Brand</strong> page. Only Brand selection needed.
+                            FAQ appears on the <strong>Brand</strong> page.
                         </p>
                     </div>
 
@@ -272,12 +294,21 @@
                         </select>
                     </div>
 
-                    {{-- Product (Model Page only) --}}
+                    {{-- Product (Category + Model tabs) --}}
                     <div id="edit_product_wrap" class="space-y-1 hidden">
                         <label class="text-gray-500 text-[11px]">Product <span class="text-red-500">*</span></label>
-                        <select name="product_id" id="edit_product_id"
+                        <select name="product_id" id="edit_product_id" onchange="onEditProductChange()"
                             class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all">
                             <option value="">— Select Brand first —</option>
+                        </select>
+                    </div>
+
+                    {{-- Category (Model tab only, optional) --}}
+                    <div id="edit_category_wrap" class="space-y-1 hidden">
+                        <label class="text-gray-500 text-[11px]">Category <span class="text-gray-400">(optional)</span></label>
+                        <select name="category_id" id="edit_category_id"
+                            class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all">
+                            <option value="">— Select Product first —</option>
                         </select>
                     </div>
 
@@ -320,7 +351,6 @@
                     </div>
 
                 </div>
-                {{-- Buttons pinned --}}
                 <div class="shrink-0 p-3 pt-2 border-t border-gray-100 bg-white flex gap-2">
                     <button type="submit" class="flex-1 bg-blue-500 text-white py-1.5 rounded-sm text-[13px] hover:bg-blue-600 transition-all">
                         Update
@@ -332,74 +362,119 @@
             </form>
         </div>
 
-    </div>{{-- /grid --}}
+    </div>
 </div>
 
 <script>
-    const allProducts = @json($products);
+    const allProducts   = @json($products);
+    const allCategories = @json($categories);
     let handleEditSubmit = null;
 
-    // ─── Populate products for a brand ─────────────────────────────────────────
-    function populateProducts(prefix, brandId, savedProductId = '') {
-        const sel = document.getElementById(prefix + '_product_id');
+    const HINTS = {
+        brand:    'FAQ appears on the <strong>Brand</strong> page. Select Brand only.',
+        category: 'FAQ appears on the <strong>Category listing</strong> page. Select Brand + Product.',
+        model:    'FAQ appears on the <strong>Model listing</strong> page. Select Brand + Product + (optional) Category.',
+    };
+
+    // ─── Populate helpers ───────────────────────────────────────────────────────
+    function populateProducts(selId, brandId, savedId = '') {
+        const sel = document.getElementById(selId);
         sel.innerHTML = '<option value="">— Select Product —</option>';
         if (!brandId) return;
         allProducts.filter(p => p.brand_id === brandId).forEach(p => {
             const o = document.createElement('option');
             o.value = p.uuid; o.textContent = p.name;
-            if (p.uuid === savedProductId) o.selected = true;
+            if (p.uuid === savedId) o.selected = true;
             sel.appendChild(o);
         });
     }
 
-    // ─── Type toggle helpers ────────────────────────────────────────────────────
-    function applyTypeUI(prefix, type) {
-        const brandTab = document.getElementById(prefix + '_tab_brand');
-        const modelTab = document.getElementById(prefix + '_tab_model');
-        const prodWrap = document.getElementById(prefix + '_product_wrap');
-        const hint     = document.getElementById(prefix + '_type_hint');
-
-        if (type === 'model') {
-            brandTab.className = 'block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all';
-            modelTab.className = 'block py-1.5 bg-blue-500 text-white font-medium transition-all';
-            prodWrap.classList.remove('hidden');
-            hint.className = 'text-[10px] text-blue-600 bg-blue-50 rounded px-2 py-1';
-            hint.innerHTML = 'FAQ will appear on the <strong>Model</strong> page. Select Brand + Product.';
-        } else {
-            brandTab.className = 'block py-1.5 bg-blue-500 text-white font-medium transition-all';
-            modelTab.className = 'block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all';
-            prodWrap.classList.add('hidden');
-            // clear product when switching to brand mode
-            const prodSel = document.getElementById(prefix + '_product_id');
-            if (prodSel) prodSel.value = '';
-            hint.className = 'text-[10px] text-blue-600 bg-blue-50 rounded px-2 py-1';
-            hint.innerHTML = 'FAQ will appear on the <strong>Brand</strong> page. Only Brand selection needed.';
-        }
+    function populateCategories(selId, productId, savedId = '') {
+        const sel = document.getElementById(selId);
+        sel.innerHTML = '<option value="">— All (no specific category) —</option>';
+        if (!productId) return;
+        allCategories.filter(c => c.product_id === productId).forEach(c => {
+            const o = document.createElement('option');
+            o.value = c.uuid; o.textContent = c.name;
+            if (c.uuid === savedId) o.selected = true;
+            sel.appendChild(o);
+        });
     }
 
+    // ─── Apply tab UI for a form (prefix = 'add' | 'edit') ─────────────────────
+    function applyTypeUI(prefix, type) {
+        ['brand', 'category', 'model'].forEach(t => {
+            document.getElementById(prefix + '_tab_' + t).className =
+                t === type
+                    ? 'block py-1.5 bg-blue-500 text-white font-medium transition-all'
+                    : 'block py-1.5 bg-gray-100 text-gray-500 font-medium transition-all';
+        });
+
+        const productWrap  = document.getElementById(prefix + '_product_wrap');
+        const categoryWrap = document.getElementById(prefix + '_category_wrap');
+        const hint         = document.getElementById(prefix + '_type_hint');
+
+        // Brand: hide product + category
+        // Category: show product, hide category
+        // Model: show product + category
+        productWrap.classList.toggle('hidden',  type === 'brand');
+        categoryWrap.classList.toggle('hidden', type !== 'model');
+
+        // Reset dependent selects when switching
+        document.getElementById(prefix + '_product_id').innerHTML  = '<option value="">— Select Brand first —</option>';
+        document.getElementById(prefix + '_category_id').innerHTML = '<option value="">— Select Product first —</option>';
+
+        // Re-cascade from current brand if available
+        const brandId = document.getElementById(prefix + '_brand').value;
+        if (brandId && type !== 'brand') {
+            populateProducts(prefix + '_product_id', brandId);
+        }
+
+        hint.innerHTML  = HINTS[type];
+        hint.className  = 'text-[10px] text-blue-600 bg-blue-50 rounded px-2 py-1';
+    }
+
+    // ─── Type toggle ────────────────────────────────────────────────────────────
     function onAddTypeChange() {
-        const type = document.querySelector('input[name="display_type"]:checked', document.getElementById('faqAddForm')).value;
+        const type = document.querySelector('#faqAddForm input[name="faq_type"]:checked').value;
         applyTypeUI('add', type);
     }
 
     function onEditTypeChange() {
-        const type = document.querySelector('#faqEditForm input[name="display_type"]:checked').value;
+        const type = document.querySelector('#faqEditForm input[name="faq_type"]:checked').value;
         applyTypeUI('edit', type);
     }
 
-    function getAddType() {
-        const r = document.querySelector('#faqAddForm input[name="display_type"]:checked');
-        return r ? r.value : 'brand';
-    }
-
+    // ─── Brand change ────────────────────────────────────────────────────────────
     function onAddBrandChange() {
+        const type    = document.querySelector('#faqAddForm input[name="faq_type"]:checked').value;
         const brandId = document.getElementById('add_brand').value;
-        populateProducts('add', brandId);
+        if (type !== 'brand') {
+            populateProducts('add_product_id', brandId);
+            document.getElementById('add_category_id').innerHTML = '<option value="">— Select Product first —</option>';
+        }
     }
 
     function onEditBrandChange() {
+        const type    = document.querySelector('#faqEditForm input[name="faq_type"]:checked').value;
         const brandId = document.getElementById('edit_brand').value;
-        populateProducts('edit', brandId);
+        if (type !== 'brand') {
+            populateProducts('edit_product_id', brandId);
+            document.getElementById('edit_category_id').innerHTML = '<option value="">— Select Product first —</option>';
+        }
+    }
+
+    // ─── Product change (only model tab cascades to categories) ─────────────────
+    function onAddProductChange() {
+        const type      = document.querySelector('#faqAddForm input[name="faq_type"]:checked').value;
+        const productId = document.getElementById('add_product_id').value;
+        if (type === 'model') populateCategories('add_category_id', productId);
+    }
+
+    function onEditProductChange() {
+        const type      = document.querySelector('#faqEditForm input[name="faq_type"]:checked').value;
+        const productId = document.getElementById('edit_product_id').value;
+        if (type === 'model') populateCategories('edit_category_id', productId);
     }
 
     // ─── Cancel ─────────────────────────────────────────────────────────────────
@@ -415,18 +490,17 @@
     // ─── Store ──────────────────────────────────────────────────────────────────
     document.getElementById('faqAddForm').addEventListener('submit', function (e) {
         e.preventDefault();
+        const type    = document.querySelector('#faqAddForm input[name="faq_type"]:checked').value;
         const brandId = document.getElementById('add_brand').value;
+
         if (!brandId) {
             Swal.fire({ icon: 'warning', title: 'Brand required', text: 'Please select a brand.', confirmButtonColor: '#3b82f6' });
             return;
         }
-        const type = getAddType();
-        if (type === 'model' && !document.getElementById('add_product_id').value) {
-            Swal.fire({ icon: 'warning', title: 'Product required', text: 'Please select a product for Model Page FAQ.', confirmButtonColor: '#3b82f6' });
+        if (type !== 'brand' && !document.getElementById('add_product_id').value) {
+            Swal.fire({ icon: 'warning', title: 'Product required', text: 'Please select a product.', confirmButtonColor: '#3b82f6' });
             return;
         }
-        // For brand type, clear product_id before submit
-        if (type === 'brand') document.getElementById('add_product_id').value = '';
 
         const formData = new FormData(this);
         fetch("{{ route('faqs.store') }}", {
@@ -436,13 +510,9 @@
         .then(r => r.json())
         .then(data => {
             if (data.success) {
-                // Reset form inputs and toggle back to default (Brand Page)
-                document.getElementById('faqAddForm').reset();
-                document.getElementById('add_product_wrap').classList.add('hidden');
+                this.reset();
+                document.querySelector('#faqAddForm input[name="faq_type"][value="brand"]').checked = true;
                 applyTypeUI('add', 'brand');
-                // Check the brand radio again since reset() unchecks radios
-                document.querySelector('#faqAddForm input[name="display_type"][value="brand"]').checked = true;
-
                 Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 1500, timerProgressBar: true })
                     .fire({ icon: 'success', title: data.message })
                     .then(() => location.reload());
@@ -454,8 +524,8 @@
     });
 
     // ─── Edit (load data) ────────────────────────────────────────────────────────
-    document.querySelectorAll('.edit-btn').forEach(button => {
-        button.addEventListener('click', async function () {
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', async function () {
             const url       = this.getAttribute('data-url');
             const updateUrl = this.getAttribute('data-update-url');
 
@@ -468,18 +538,21 @@
                 }).then(r => r.json());
 
                 if (result.success) {
-                    const d = result.data;
-                    const type = d.display_level === 'model' ? 'model' : 'brand';
+                    const d    = result.data;
+                    const type = d.faq_type || 'brand';
 
-                    // Set toggle
-                    document.getElementById(type === 'model' ? 'edit_type_model' : 'edit_type_brand').checked = true;
+                    document.getElementById('edit_type_' + type).checked = true;
                     applyTypeUI('edit', type);
 
-                    // Set brand, then cascade products
                     document.getElementById('edit_brand').value = d.brand_id || '';
-                    populateProducts('edit', d.brand_id || '', d.product_id || '');
 
-                    // Q&A
+                    if (type === 'category' || type === 'model') {
+                        populateProducts('edit_product_id', d.brand_id || '', d.product_id || '');
+                    }
+                    if (type === 'model' && d.product_id) {
+                        populateCategories('edit_category_id', d.product_id, d.category_id || '');
+                    }
+
                     document.getElementById('edit_q_english').value = d.q_english || '';
                     document.getElementById('edit_a_english').value = d.a_english || '';
                     document.getElementById('edit_q_khmer').value   = d.q_khmer   || '';
@@ -492,17 +565,17 @@
 
                     handleEditSubmit = async function (e) {
                         e.preventDefault();
-                        const brandId = document.getElementById('edit_brand').value;
+                        const editType = document.querySelector('#faqEditForm input[name="faq_type"]:checked').value;
+                        const brandId  = document.getElementById('edit_brand').value;
+
                         if (!brandId) {
                             Swal.fire({ icon: 'warning', title: 'Brand required', text: 'Please select a brand.', confirmButtonColor: '#3b82f6' });
                             return;
                         }
-                        const editType = document.querySelector('#faqEditForm input[name="display_type"]:checked').value;
-                        if (editType === 'model' && !document.getElementById('edit_product_id').value) {
-                            Swal.fire({ icon: 'warning', title: 'Product required', text: 'Please select a product for Model Page FAQ.', confirmButtonColor: '#3b82f6' });
+                        if (editType !== 'brand' && !document.getElementById('edit_product_id').value) {
+                            Swal.fire({ icon: 'warning', title: 'Product required', text: 'Please select a product.', confirmButtonColor: '#3b82f6' });
                             return;
                         }
-                        if (editType === 'brand') document.getElementById('edit_product_id').value = '';
 
                         const formData = new FormData(editForm);
                         try {
@@ -536,8 +609,8 @@
     });
 
     // ─── Delete ──────────────────────────────────────────────────────────────────
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
             const url = this.getAttribute('data-url');
             Swal.fire({
                 title: 'Are you sure?', text: "You won't be able to revert this!",

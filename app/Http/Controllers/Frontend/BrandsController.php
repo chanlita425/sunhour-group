@@ -71,12 +71,25 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        // Brand-level FAQs: brand_id matches, no specific product (display_type = brand)
+        // Brand-type FAQs only
         $faqs = FAQs::where('brand_id', $brands->uuid)
-            ->whereNull('product_id')
+            ->where('faq_type', 'brand')
             ->get();
 
-        return view('frontends.brands.show', compact('brands', 'product', 'faqs'));
+        // Map brand slug to navigation category lang key
+        $navCategoryMap = [
+            'toto'         => 'SanitaryWareFitting',
+            'ariston'      => 'WaterHeaterSystem',
+            'grund-fos'    => 'WaterPump',
+            'pure-pro'     => 'WaterFilter',
+            'rak-ceramics' => 'PorcelainTileCeramicTile',
+        ];
+        $navCategoryKey = $navCategoryMap[$brands->slug] ?? null;
+        $navCategoryTitle = $navCategoryKey
+            ? __('message.' . $navCategoryKey) . ' ' . __('message.product')
+            : __('message.product');
+
+        return view('frontends.brands.show', compact('brands', 'product', 'faqs', 'navCategoryTitle'));
     }
 
     // public function category($brand, $product)
@@ -125,7 +138,11 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        $faqs = FAQs::where('product_id', $products->uuid)->get();
+        // Category-type FAQs: brand + product match, faq_type = 'category'
+        $faqs = FAQs::where('brand_id', $brands->uuid)
+            ->where('product_id', $products->uuid)
+            ->where('faq_type', 'category')
+            ->get();
 
         return view('frontends.details', compact('brands', 'products', 'category', 'faqs'));
     }
@@ -185,12 +202,30 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        // Model-level FAQs: brand_id matches + product_id matches the actual product
-        // $products may be a Category — resolve the real product UUID for the FAQ lookup
+        // Model-type FAQs: $products may be a Category — resolve the real product UUID
         $productUuidForFaq = $category ? $category->product_id : $products->uuid;
-        $faqs = FAQs::where('brand_id', $brands->uuid)
-            ->where('product_id', $productUuidForFaq)
-            ->get();
+
+        if ($category) {
+            // Prefer category-specific model FAQs; fall back to product-level model FAQs
+            $faqs = FAQs::where('brand_id', $brands->uuid)
+                ->where('product_id', $category->product_id)
+                ->where('faq_type', 'model')
+                ->where('category_id', $category->uuid)
+                ->get();
+            if ($faqs->isEmpty()) {
+                $faqs = FAQs::where('brand_id', $brands->uuid)
+                    ->where('product_id', $category->product_id)
+                    ->where('faq_type', 'model')
+                    ->whereNull('category_id')
+                    ->get();
+            }
+        } else {
+            $faqs = FAQs::where('brand_id', $brands->uuid)
+                ->where('product_id', $productUuidForFaq)
+                ->where('faq_type', 'model')
+                ->whereNull('category_id')
+                ->get();
+        }
 
         return view('frontends.brands.ModelClient.index', compact('products', 'brands', 'model', 'category', 'faqs'));
     }
@@ -249,10 +284,19 @@ class BrandsController extends Controller
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
-        // Model-level FAQs for this category's parent product
+        // Model-type FAQs: prefer category-specific, fall back to product-level
         $faqs = FAQs::where('brand_id', $brands->uuid)
             ->where('product_id', $category->product_id)
+            ->where('faq_type', 'model')
+            ->where('category_id', $category->uuid)
             ->get();
+        if ($faqs->isEmpty()) {
+            $faqs = FAQs::where('brand_id', $brands->uuid)
+                ->where('product_id', $category->product_id)
+                ->where('faq_type', 'model')
+                ->whereNull('category_id')
+                ->get();
+        }
 
         return view('frontends.brands.ModelClient.index', compact('products', 'category', 'brands', 'model', 'faqs'));
     }

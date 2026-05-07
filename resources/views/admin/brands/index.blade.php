@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <div id="formAdd" class="col-span-4 xl:col-span-3 w-full pr-5">
+            <div id="formAdd" class="col-span-4 xl:col-span-3 w-full pr-5 h-[75vh] xl:h-[85vh] overflow-y-auto">
                 <form action="{{ route('brands.store') }}" method="POST" class="w-full bg-white rounded-lg p-5"
                     id="brandForm">
                     @csrf
@@ -157,7 +157,7 @@
                                 this.logoSvg.trim() !== '';
                         }
                     }" class="space-y-4">
-                        <!-- Brand Input -->
+                        <!-- Brand Name -->
                         <div class="form-group w-full space-y-2">
                             <label for="name" class="text-gray-500 text-[12px]">Brand Name</label>
                             <input type="text" name="name" x-model="name"
@@ -165,7 +165,15 @@
                                 placeholder="Enter Brand Name">
                         </div>
 
-                        <!-- Logo SVG Path Input -->
+                        <!-- Description -->
+                        <div class="form-group w-full space-y-2 overflow-hidden">
+                            <label for="add_brand_description" class="text-gray-500 text-[12px]">Description</label>
+                            <textarea name="description" id="add_brand_description" rows="4"
+                                class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"
+                                placeholder="Enter description (optional)"></textarea>
+                        </div>
+
+                        <!-- Logo SVG Path -->
                         <div class="form-group w-full space-y-2">
                             <label for="logoSvg" class="text-gray-500 text-[12px]">Logo SVG Path</label>
                             <textarea name="logoSvg" x-model="logoSvg"
@@ -182,11 +190,12 @@
                     </div>
                 </form>
             </div>
-            <div id="formEdit" class="hidden col-span-4 xl:col-span-3 w-full pr-5">
+            <div id="formEdit" class="hidden col-span-4 xl:col-span-3 w-full pr-5 h-[75vh] xl:h-[85vh] overflow-y-auto">
                 <form method="POST" class="w-full bg-white rounded-lg p-5" id="brandFormEdit">
                     @csrf
                     @method('PUT')
                     <div class="space-y-4">
+                        <!-- Brand Name -->
                         <div class="form-group w-full space-y-2">
                             <label for="name" class="text-gray-500 text-[12px]">Brand Name</label>
                             <input type="text" name="name" id="name"
@@ -194,6 +203,15 @@
                                 placeholder="Enter Brand Name">
                         </div>
 
+                        <!-- Description -->
+                        <div class="form-group w-full space-y-2 overflow-hidden">
+                            <label for="edit_brand_description" class="text-gray-500 text-[12px]">Description</label>
+                            <textarea name="description" id="edit_brand_description" rows="4"
+                                class="form-control w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] font-light outline-none focus:bg-gray-200 transition-all duration-300"
+                                placeholder="Enter description (optional)"></textarea>
+                        </div>
+
+                        <!-- Logo SVG Path -->
                         <div class="form-group w-full space-y-2">
                             <label for="logoSvg" class="text-gray-500 text-[12px]">Logo SVG Path</label>
                             <textarea name="logoSvg" id="logoSvg"
@@ -216,11 +234,26 @@
         </div>
     </div>
 
-    <!-- Add this script at the bottom of your content section -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
+        let addBrandEditorInstance = null;
+        let editBrandEditorInstance = null;
+
+        ClassicEditor.create(document.querySelector('#add_brand_description'))
+            .then(editor => { addBrandEditorInstance = editor; })
+            .catch(error => { console.error(error); });
+
+        ClassicEditor.create(document.querySelector('#edit_brand_description'))
+            .then(editor => { editBrandEditorInstance = editor; })
+            .catch(error => { console.error(error); });
+
         {{-- Store --}}
         document.getElementById('brandForm').addEventListener('submit', function(e) {
             e.preventDefault();
+
+            if (addBrandEditorInstance) {
+                document.getElementById('add_brand_description').value = addBrandEditorInstance.getData();
+            }
 
             let formData = new FormData(this);
 
@@ -308,6 +341,11 @@
                     if (data.success) {
                         document.getElementById('name').value = data.data.name || '';
                         document.getElementById('logoSvg').value = data.data.logoSvg || '';
+                        if (editBrandEditorInstance) {
+                            editBrandEditorInstance.setData(data.data.description || '');
+                        } else {
+                            document.getElementById('edit_brand_description').value = data.data.description || '';
+                        }
 
                         // Remove previous listener if it exists
                         if (handleSubmit) {
@@ -317,6 +355,9 @@
                         // Define submit handler
                         handleSubmit = async function (e) {
                             e.preventDefault();
+                            if (editBrandEditorInstance) {
+                                document.getElementById('edit_brand_description').value = editBrandEditorInstance.getData();
+                            }
                             const formData = new FormData(brandForm);
                             try {
                                 const updateResponse = await fetch(updateUrl, {

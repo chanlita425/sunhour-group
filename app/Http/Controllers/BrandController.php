@@ -63,7 +63,8 @@ class BrandController extends Controller
             'uuid' => $this->encodeIdToString(1),
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'logoSvg' => $request->logoSvg
+            'logoSvg' => $request->logoSvg,
+            'description' => $request->description ?? null,
         ]);
 
         if ($post) {
@@ -101,7 +102,8 @@ class BrandController extends Controller
         $updated = $brand->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'logoSvg' => $request->logoSvg
+            'logoSvg' => $request->logoSvg,
+            'description' => $request->description ?? null,
         ]);
 
         if ($updated) {
