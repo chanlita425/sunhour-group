@@ -10,7 +10,7 @@
     </div>
     <ul tabindex="0" class="dropdown-content menu bg-black rounded-box z-[1] w-52 p-2 shadow">
         <li class="{{session()->get('locale') != 'en' ? '': 'hidden'}}">
-            <a href="{{ route('locale', ['locale' => 'en']) }}">
+            <a href="{{ request()->fullUrlWithQuery(['locale' => 'en']) }}">
                 <img src="{{asset('en-flag.svg')}}" alt="" class="w-[2rem]">
                 <span class="text-white">
                     @lang('message.en')
@@ -18,7 +18,7 @@
             </a>
         </li>
         <li class="{{session()->get('locale') != 'km' ? '': 'hidden'}}">
-            <a href="{{ route('locale', ['locale' => 'km']) }}">
+            <a href="{{ request()->fullUrlWithQuery(['locale' => 'km']) }}">
                 <img src="{{asset('kh-flag.svg')}}" alt="" class="w-[2rem]">
                 <span class="text-white ">
                     @lang('message.kh')
@@ -26,7 +26,7 @@
             </a>
         </li>
         <li class="{{session()->get('locale') != 'cn' ? '': 'hidden'}}">
-            <a href="{{ route('locale', ['locale' => 'cn']) }}">
+            <a href="{{ request()->fullUrlWithQuery(['locale' => 'cn']) }}">
                 <img src="{{asset('china-flag.svg')}}" alt="" class="w-[2rem]">
                 <span class="text-white">
                     @lang('message.cn')
