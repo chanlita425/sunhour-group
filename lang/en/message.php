@@ -3,11 +3,13 @@
 return [
     'welcome' => 'Welcome to',
     'sunhour' => "SUNHOUR",
+    'sunhour_brand' => "Building Material Cambodia | Water System & Bathroom Solutions",
     'group' => "GROUP",
     'en' => 'English',
     'kh' => 'ភាសាខ្មែរ',
     'cn' => 'Chinese',
     'description_cm' => "Sun Hour Group was founded by Mr. Sun Hour, whose vision for quality construction materials in Cambodia drives the company's growth and success. ",
+    'description_brand' => "Sun Hour Group is a trusted supplier of building materials in Cambodia, specializing in water systems, bathroom equipment, and mechanical solutions for residential, commercial, and industrial projects.",
     'aboutus' => 'About Us',
     'title_aboutus' => '1998
     Become Global Brands Importer',
