@@ -313,6 +313,7 @@ namespace App\Models\Admin {
     /**
      * App\Models\Admin\Brand
      *
+     * @property string|null $description
      * @property string|null $slug
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
@@ -327,6 +328,7 @@ namespace App\Models\Admin {
      * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand whereSlug($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand whereDescription($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Brand>|Brand query()

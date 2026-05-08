@@ -376,7 +376,7 @@
         </div>
         <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
             <div class="my-[3rem]" >
-                <p class="text-black text-[20px] md:text-[22px] lg:text-[35px] xl:text-[35px] font-medium capitalize">  
+                <p class="text-black text-[20px] md:text-[22px] lg:text-[32px] xl:text-[32px] font-medium capitalize">  
                     {{ str_replace('-', ' ', $categories ?? (app()->getLocale() == 'en' ? $products->name : ($app->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese))) }}
                 </p>
                 

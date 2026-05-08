@@ -8,6 +8,7 @@
     @endcomponent
     <div class=" p-0 overflow-x-hidden  scroll-smooth h-screen">
 
+        {{-- lead banner image --}}
         <div class="w-full max-w-screen-xl mx-auto mt-[5rem] xl:mt-[10rem] px-3 md:px-5">
             @if($brands->uuid == 'eTRFTWZVeS01')
                 <img loading="lazy"
@@ -43,12 +44,12 @@
                 />
             @endif
         </div>
-        <div class="w-full  mx-auto px-3 md:px-5">
-            <h1 class="text-center font-medium text-[20px] md:text-[22px] lg:text-[35px] xl:text-[35px] p-5">{{ $navCategoryTitle }}</h1>
+        <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
+            <h1 class="text-center font-medium text-[20px] md:text-[22px] lg:text-[32px] xl:text-[32px] p-5">{{ $navCategoryTitle }}</h1>
             @if(!empty($brands->description))
-                <div class="w-full max-w-screen-xl mx-auto text-black px-3 md:px-5 mb-12 ">{!! $brands->description !!}</div>
+                <div class="w-full max-w-screen-xl mx-auto text-black mb-16 mt-3 ">{!! $brands->description !!}</div>
             @endif
-            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] p-3 md:p-0">
+            <div class="grid grid-cols-2  md:grid-cols-3 xl:grid-cols-4 justify-center xl:justify-start items-center gap-[1.5rem] p-3 md:p-0">
                 @foreach($product as $item)
                     @if($item->status === 1)
                         <a href="{{ route('category.show', [$brands->slug, $item->slug]) }}" class="group transition-all duration-150 ease-in-out">

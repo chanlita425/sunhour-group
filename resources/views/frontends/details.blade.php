@@ -61,7 +61,7 @@
                 />
             @endif
 
-            <div>
+            {{-- <div>
                 @if($products->uuid == 'a2U1eS0zMTIzNTg=')
                     <p class="text-black my-3 font-light text-wrap">
                         The innovative shower toilet technology - WASHLET is TOTO's signature product. IT was first launched in 1980 and has attracted the attention of the rest of the world with its thorough cleansing capabilities and appealing comfort features. With unparalleled hygiene and comfort standards, WASHLET is renowned as the World's first-class toilet.
@@ -92,11 +92,11 @@
                     </p>
                 @else
                 @endif
-            </div>
+            </div> --}}
         </div>
 
         <section class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="font-medium text-[20px] md:text-[22px] lg:text-[35px] xl:text-[35px] p-5">
+            <h1 class="font-medium text-[20px] md:text-[22px] lg:text-[32px] xl:text-[32px] p-5">
                 {{ app()->getLocale() == 'en' ? $products->name : (app()->getLocale() == 'km' ? $products->name_khmer : $products->name_chinese) }}
             </h1>
             @if(!empty($products->description))
