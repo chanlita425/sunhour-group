@@ -18,6 +18,7 @@ class FAQs extends Model
         'q_english', 'a_english',
         'q_khmer', 'a_khmer',
         'q_china', 'a_china',
+        'link_text', 'link_url',
     ];
 
     public function brand()

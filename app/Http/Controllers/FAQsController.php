@@ -51,6 +51,8 @@ class FAQsController extends Controller
             'a_khmer'     => $request->a_khmer,
             'q_china'     => $request->q_china,
             'a_china'     => $request->a_china,
+            'link_text'   => $request->link_text ?: null,
+            'link_url'    => $request->link_url  ?: null,
         ]);
 
         return response()->json([
@@ -103,6 +105,8 @@ class FAQsController extends Controller
             'a_khmer'     => $request->a_khmer,
             'q_china'     => $request->q_china,
             'a_china'     => $request->a_china,
+            'link_text'   => $request->link_text ?: null,
+            'link_url'    => $request->link_url  ?: null,
         ]);
 
         return response()->json([

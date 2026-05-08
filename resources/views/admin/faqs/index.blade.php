@@ -242,6 +242,22 @@
                             placeholder="Enter answer"></textarea>
                     </div>
 
+                    <hr class="border-gray-100">
+
+                    <p class="text-[11px] font-semibold text-gray-600">Internal Link <span class="text-gray-400">(optional)</span></p>
+                    <div class="space-y-1">
+                        <label class="text-gray-500 text-[11px]">Link Description</label>
+                        <input type="text" name="link_text"
+                            class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all"
+                            placeholder='e.g. Explore our TOTO Faucet Cambodia collection'>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-gray-500 text-[11px]">Internal Page Link</label>
+                        <input type="text" name="link_url"
+                            class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all"
+                            placeholder='e.g. /en/brands/toto/fittings'>
+                    </div>
+
                 </div>
                 <div class="shrink-0 p-3 pt-2 border-t border-gray-100 bg-white">
                     <button type="submit" class="w-full bg-blue-500 text-white py-1.5 rounded-sm text-[13px] hover:bg-blue-600 transition-all">
@@ -348,6 +364,22 @@
                         <label class="text-gray-500 text-[11px]">Answer</label>
                         <textarea name="a_china" id="edit_a_china" style="height:48px;overflow-y:auto;resize:none"
                             class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all"></textarea>
+                    </div>
+
+                    <hr class="border-gray-100">
+
+                    <p class="text-[11px] font-semibold text-gray-600">Internal Link <span class="text-gray-400">(optional)</span></p>
+                    <div class="space-y-1">
+                        <label class="text-gray-500 text-[11px]">Link Description</label>
+                        <input type="text" name="link_text" id="edit_link_text"
+                            class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all"
+                            placeholder='e.g. Explore our TOTO Faucet Cambodia collection'>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-gray-500 text-[11px]">Internal Page Link</label>
+                        <input type="text" name="link_url" id="edit_link_url"
+                            class="w-full bg-gray-100 rounded-sm py-1 px-2 text-[12px] outline-none focus:bg-gray-200 transition-all"
+                            placeholder='e.g. /en/brands/toto/fittings'>
                     </div>
 
                 </div>
@@ -559,6 +591,8 @@
                     document.getElementById('edit_a_khmer').value   = d.a_khmer   || '';
                     document.getElementById('edit_q_china').value   = d.q_china   || '';
                     document.getElementById('edit_a_china').value   = d.a_china   || '';
+                    document.getElementById('edit_link_text').value = d.link_text  || '';
+                    document.getElementById('edit_link_url').value  = d.link_url   || '';
 
                     const editForm = document.getElementById('faqEditForm');
                     if (handleEditSubmit) editForm.removeEventListener('submit', handleEditSubmit);

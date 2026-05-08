@@ -114,6 +114,9 @@
                             <div id="faq-panel-{{ $index }}" class="hidden px-4 py-3"
                                 style="background:#B5D4F4; border: 0.5px solid #85B7EB; border-left: 3px solid #185FA5; border-top: none;">
                                 <p class="text-sm leading-relaxed" style="color: #0C447C;">{{ $answer }}</p>
+                                @if(!empty($faq->link_text) && !empty($faq->link_url))
+                                    <a href="{{ $faq->link_url }}" class="inline-block mt-2 text-sm font-medium underline underline-offset-2" style="color: #0C447C;">{{ $faq->link_text }}</a>
+                                @endif
                             </div>
                         @endif
                     @endforeach
