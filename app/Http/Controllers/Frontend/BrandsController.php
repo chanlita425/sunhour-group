@@ -45,8 +45,6 @@ class BrandsController extends Controller
         return view('frontends.brands.index', compact('brand'));
     }
 
-
-
     public function show($brand)
     {
         // Get the brand by slug
@@ -58,10 +56,30 @@ class BrandsController extends Controller
         // Extract all product images for Open Graph 
         $images = $product->pluck('link')->filter()->toArray();
 
-        //  Dynamic SEO
-        // $title = $brands->name . " Cambodia | " . __('message.product') . " - ";
-        $title =  __('message.product') . " - ";
-        $description = $brands->description ?? "Discover {$brands->name}, Bath Tub Cambodia, Water Purifier, Faucet Cambodia, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet,Heat Pump,Water Dispenser Cambodia, Water Filter Cambodia, Bathroom Equipment, Water Heating System in Cambodia’s high-quality water heating systems. From energy-saving heat pumps and solar water solutions to home shower units and storage water heaters, we have the perfect hot water solution for every home.";
+        // Per-brand custom SEO overrides
+        $brandSeoOverrides = [
+            'pure-pro' => [
+                'title'       => "Water Filter Cambodia | Home Drinking & Industrial Water Treatment",
+                'description' => "Find water filter solutions in Cambodia including home drinking water systems, water dispensers, and industrial water treatment. Clean, safe, and reliable water solutions.",
+            ],
+            'ariston' => [
+                'title'       => "Water Heating System Cambodia | Storage, Instant & Heat Pump Solutions",
+                'description' => "Discover water heating systems in Cambodia including storage water heaters, instantaneous heaters, and heat pumps. Reliable hot water solutions for homes, hotels, and buildings.",
+            ],
+            'toto' => [
+                'title'       => "TOTO Brand Cambodia | Premium Bathroom Equipment & Sanitary",
+                'description' => "Discover TOTO brand in Cambodia offering premium bathroom equipment, faucets, showers, and sanitary solutions for homes, hotels, and commercial projects.",
+            ],
+        ];
+
+        if (isset($brandSeoOverrides[$brands->slug])) {
+            $title       = $brandSeoOverrides[$brands->slug]['title'];
+            $description = $brandSeoOverrides[$brands->slug]['description'];
+        } else {
+            $title       = __('message.product') . " - ";
+            $description = $brands->description ?? "Discover {$brands->name}, Bath Tub Cambodia, Water Purifier, Faucet Cambodia, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet,Heat Pump,Water Dispenser Cambodia, Water Filter Cambodia, Bathroom Equipment, Water Heating System in Cambodia’s high-quality water heating systems. From energy-saving heat pumps and solar water solutions to home shower units and storage water heaters, we have the perfect hot water solution for every home.";
+        }
+
         $locale = app()->getLocale();
         SEOTools::setTitle($title);
         SEOTools::setDescription($description);
@@ -126,7 +144,7 @@ class BrandsController extends Controller
         //    . (session()->get('locale') == 'en' ? $products->name : $products->name_khmer)
         //    . " - ";
 
-            $title = (session()->get('locale') == 'en' ? $products->name : $products->name_khmer) . " - ";
+        $title = (session()->get('locale') == 'en' ? $products->name : $products->name_khmer) . " - ";
 
         $description = $products->description ?? "{$brands->name} Cambodia offers premium {$products->name}, Bathroom Equipment, Bath Tub Cambodia, Faucet Cambodia, Water Purifier, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia, Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia, Toto faucet, Heat Pump, Water Dispenser Cambodia, Bathroom Equipment, Water Filter Cambodia, Water Heating System water machines, សំភារៈប្រើនៅទីសាធារណៈ,and safe hydration solutions in Phnom Penh.";
         $locale = app()->getLocale();
@@ -181,7 +199,11 @@ class BrandsController extends Controller
             : Product::where('slug', $product)->firstOrFail();
 
         // Get all models for this product
-        $model = Models::where('product_id', $products->uuid)->get();
+        // $model = Models::where('product_id', $products->uuid)->get();
+        $model = Models::where(
+            'product_id',
+            $category ? $category->product_id : $products->uuid
+        )->get();
 
         // Extract all images from models
         $images = $model->pluck('link')->filter()->toArray();
@@ -191,14 +213,69 @@ class BrandsController extends Controller
         //     . (session()->get('locale') == 'en' ? $products->name : $products->name_khmer)
         //     . " - ";
 
-        $title = (session()->get('locale') == 'en' ? $products->name : $products->name_khmer) . " - ";
-        $description = $products->description ?? "{$brands->name} Cambodia offers premium {$products->name}, Bath Tub Cambodia, សំភារៈប្រើនៅទីសាធារណៈ,Faucet Cambodia, Water Purifier, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet, Heat Pump, Bathroom Equipment, Water Dispenser Cambodia, Water Filter Cambodia, Water Heating System and safe hydration solutions in Phnom Penh.";
+        // $title = (session()->get('locale') == 'en' ? $products->name : $products->name_khmer) . " - ";
+        // $description = $products->description ?? "{$brands->name} Cambodia offers premium {$products->name}, Bath Tub Cambodia, សំភារៈប្រើនៅទីសាធារណៈ,Faucet Cambodia, Water Purifier, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet, Heat Pump, Bathroom Equipment, Water Dispenser Cambodia, Water Filter Cambodia, Water Heating System and safe hydration solutions in Phnom Penh.";
+    
+        // Per-product custom SEO overrides
+        $seoOverrides = [
+            'storage-water-heater' => [
+                'title'       => 'Storage Water Heater Cambodia | Hot Water System for Home & Building',
+                'description' => 'Explore storage water heaters in Cambodia for reliable and consistent hot water supply. Ideal for homes, hotels, and commercial buildings in Phnom Penh and nationwide.',
+            ],
+            'water-transfer-system-cambodia' => [
+                'title'       => "Water Transfer Cambodia | Pump System & Water Transfer Solutions",
+                'description' => "Discover water transfer solutions in Cambodia including transfer pumps and booster systems for homes, buildings, and industrial projects. Reliable and efficient water flow systems.",
+            ],
+            'heat-pump-cambodia' => [
+                'title'       => "Heat Pump Cambodia | Energy Efficient Hot Water System",
+                'description' => "Discover heat pump systems in Cambodia for energy-efficient hot water solutions. Ideal for homes, hotels, and commercial buildings with reduced electricity consumption.",
+            ],
+            'bathroom-accessories-cambodia' => [
+                'title'       => "Bathroom Accessories Cambodia | TOTO Shower & Bathroom Fixtures",
+                'description' => "Discover bathroom accessories in Cambodia including TOTO shower sets, hand showers, and bathroom fixtures. Perfect for homes, hotels, and commercial projects.",
+            ],
+            'home-drinking-water-cambodia' => [
+                'title'       => "Home Drinking Water Cambodia | Water Purifier & Drinking Water System",
+                'description' => "Discover home drinking water systems in Cambodia including water purifiers, RO systems, and dispensers. Clean, safe, and reliable drinking water for homes and offices.",
+            ],
+            'toto-faucet' => [
+                'title'       => "TOTO Faucet Cambodia | Premium Bathroom Faucet Solutions",
+                'description' => "Explore TOTO faucets in Cambodia with modern design, durability, and water efficiency. Ideal for homes, hotels, and commercial bathroom projects.",
+            ],
+        ];
+
+        $slug = $product; // URL slug
+        if (isset($seoOverrides[$slug])) {
+            $title       = $seoOverrides[$slug]['title'];
+            $description = $seoOverrides[$slug]['description'];
+        } else {
+            $title       = (session()->get('locale') == 'en' ? $products->name : $products->name_khmer) . " - ";
+            $description = $products->description ?? "{$brands->name} Cambodia offers premium {$products->name}, Bath Tub Cambodia, សំភារៈប្រើនៅទីសាធារណៈ,Faucet Cambodia, Water Purifier, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia,Toto faucet, Heat Pump, Bathroom Equipment, Water Dispenser Cambodia, Water Filter Cambodia, Water Heating System and safe hydration solutions in Phnom Penh.";
+        }
+
+        // $locale = app()->getLocale();
+        // SEOTools::setTitle($title);
+        // SEOTools::setDescription($description);
+        // SEOTools::opengraph()->setUrl(route('brands-client.model', [$brand, $product, 'locale' => $locale]));
+        // SEOTools::setCanonical(route('brands-client.model', [$brand, $product, 'locale' => $locale]));
+
         $locale = app()->getLocale();
         SEOTools::setTitle($title);
         SEOTools::setDescription($description);
-        SEOTools::opengraph()->setUrl(route('brands-client.model', [$brand, $product, 'locale' => $locale]));
-        SEOTools::setCanonical(route('brands-client.model', [$brand, $product, 'locale' => $locale]));
-        SEOTools::opengraph()->addImages($images); // optional Open Graph images
+
+        SEOTools::opengraph()->setUrl(route('brands-client.model', [
+            'brands'   => $brand,
+            'products' => $product,
+            'locale'   => $locale,
+        ]));
+
+        SEOTools::setCanonical(route('brands-client.model', [
+            'brands'   => $brand,
+            'products' => $product,
+            'locale'   => $locale,
+        ]));
+
+        SEOTools::opengraph()->addImages($images);
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
 
@@ -261,25 +338,38 @@ class BrandsController extends Controller
         $category = Category::where('slug', $categories)->firstOrFail();
 
         // Determine the product (either from category or fallback)
-        $products = $category
-            ? $category
-            : Product::where('slug', $product)->firstOrFail();
+        // $products = $category
+        //     ? $category
+        //     : Product::where('slug', $product)->firstOrFail();
 
+        $products = Product::where('slug', $product)->firstOrFail();
+        
         // Get all models for this category
         $model = Models::where('category_id', $category->uuid)->get();
 
         // Extract images from models for Open Graph
         $images = $model->pluck('link')->filter()->toArray();
 
-        // ✅ Dynamic SEO
+        // Dynamic SEO
         // $title = "{$brands->name} Camobodia | {$category->name} Models | {$products->name} | - ";
         $title = "{$category->name} Models | {$products->name} | - ";
         $description = $category->description ?? "Explore all models in {$category->name} for {$products->name} by {$brands->name} ,សំភារៈប្រើនៅទីសាធារណៈ, Bath Tub Cambodia, Water Purifier, Water Purified ,Water Pump, Water Filter Cambodia,Tiles Cambodia, Building Material, Accessories Cambodia,Toto bathroom, Water Filter Cambodia, Heat Pump, Toto faucet, Water Dispenser Cambodia, Water Machine Cambodia, Bathroom Equipment, Toto faucet,Heat Pump,Water Dispenser Cambodia,Water Filter Cambodia, Water Heating System at Sun Hour Group.";
         $locale = app()->getLocale();
         SEOTools::setTitle($title);
         SEOTools::setDescription($description);
-        SEOTools::opengraph()->setUrl(route('brands-client.model_category', [$brand, $products, $categories, 'locale' => $locale]));
-        SEOTools::setCanonical(route('brands-client.model_category', [$brand, $products, $categories, 'locale' => $locale]));
+
+        SEOTools::opengraph()->setUrl(route('brands-client.model_category', [
+    'brands'   => $brand,
+    'products' => $product,
+    'category' => $categories,
+]));
+
+SEOTools::setCanonical(route('brands-client.model_category', [
+    'brands'   => $brand,
+    'products' => $product,
+    'category' => $categories,
+]));
+
         SEOTools::opengraph()->addImages($images);
         SEOTools::opengraph()->addProperty('type', 'website');
         SEOTools::twitter()->setSite('@SunHourGroup');
@@ -311,32 +401,93 @@ class BrandsController extends Controller
             if (!$product) {
                 abort(404, 'Product not found.');
             }
-            $category = Category::query()->where('product_id', $product->uuid)->first();
-        }
 
+            $category = Category::query()
+                ->where('product_id', $product->uuid)
+                ->first();
+        }
 
         $models = Models::query()
             ->where('uuid', $model)
-            // ->where('slug', $products)
-            // ->first();
-            ->firstOrFail(); // Use firstOrFail for a clear 404 if not found
+            ->firstOrFail();
 
+        // SEO
+        $this->setModelSeo($models, $brand);
 
-        $functions = ModelFunction::query()->where('model_id', $models->uuid)
+        $functions = ModelFunction::query()
+            ->where('model_id', $models->uuid)
             ->get();
+
         $tech = Tecnology::query()->get();
-        $fileDownloads = FileDownload::query()->where('model_id', $models->uuid)
+
+        $fileDownloads = FileDownload::query()
+            ->where('model_id', $models->uuid)
             ->get();
-        $awards = Award::query()->where('model_id', $models->uuid)
+
+        $awards = Award::query()
+            ->where('model_id', $models->uuid)
             ->get();
-        $medias = Media::query()->where('model_id', $models->uuid)->first();
-        $features = Feature::query()->where('model_id', $models->uuid)
+
+        $medias = Media::query()
+            ->where('model_id', $models->uuid)
+            ->first();
+
+        $features = Feature::query()
+            ->where('model_id', $models->uuid)
             ->get();
+
         $spaces = Space::query()
             ->where('model_id', $models->uuid)
             ->get();
-        $daily = DailyClean::query()->where('model_id', $models->uuid)->first();
-        $deep = DeepClean::query()->where('model_id', $models->uuid)->first();
-        return view('frontends.brands.ModelClient.ModelDetail.index', compact('models', 'brand', 'functions', 'daily', 'deep', 'spaces', 'fileDownloads', 'medias', 'features', 'tech', 'awards'));
+
+        $daily = DailyClean::query()
+            ->where('model_id', $models->uuid)
+            ->first();
+
+        $deep = DeepClean::query()
+            ->where('model_id', $models->uuid)
+            ->first();
+
+        return view(
+            'frontends.brands.ModelClient.ModelDetail.index',
+            compact(
+                'models',
+                'brand',
+                'functions',
+                'daily',
+                'deep',
+                'spaces',
+                'fileDownloads',
+                'medias',
+                'features',
+                'tech',
+                'awards'
+            )
+        );
+    }
+
+    private function setModelSeo($models, $brand): void
+    {
+        $title = $models->name . ' Cambodia | ' . ucfirst($brand);
+
+        $description = $models->description
+            ?? $models->name . ' by Sun Hour Group Cambodia';
+
+        $images = !empty($models->link)
+            ? [asset($models->link)]
+            : [];
+
+        SEOTools::setTitle($title);
+        SEOTools::setDescription($description);
+        SEOTools::opengraph()->setUrl(url()->current());
+        SEOTools::setCanonical(url()->current());
+
+        if (!empty($images)) {
+            SEOTools::opengraph()->addImages($images);
+        }
+
+        SEOTools::opengraph()->addProperty('type', 'website');
+        SEOTools::twitter()->setSite('@SunHourGroup');
     }
 }
+

@@ -45,7 +45,7 @@
             @endif
         </div>
         <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-            <h1 class="text-center font-medium text-[20px] md:text-[22px] lg:text-[32px] xl:text-[32px] p-5">{{ $navCategoryTitle }}</h1>
+            <h1 class="text-center font-medium text-[20px] md:text-[22px] lg:text-[32px] xl:text-[32px] p-5"> {{ $brands->name ?? $navCategoryTitle }} Products</h1>
             @if(!empty($brands->description))
                 <div class="w-full max-w-screen-xl mx-auto text-black mb-16 mt-3 ">{!! $brands->description !!}</div>
             @endif
@@ -91,7 +91,7 @@
             {{-- FAQ Section --}}
             @if(isset($faqs) && $faqs->isNotEmpty())
             <div class="my-[3rem] max-w-full mx-auto">
-                <h2 class="text-black text-xl font-medium my-4 text-center">Frequently Asked Questions?</h2>
+                <h2 class="text-black text-xl font-medium my-4 text-center">Frequently Asked Questions</h2>
                 <div class="flex flex-col gap-2 pb-[10rem]">
                     @foreach($faqs as $index => $faq)
                         @php

@@ -4376,6 +4376,8 @@ namespace App\Models {
     /**
      * App\Models\FAQs
      *
+     * @property string|null $link_url
+     * @property string|null $link_text
      * @property string $faq_type
      * @property string|null $category_id
      * @property string|null $brand_id
@@ -4406,6 +4408,8 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereBrandId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereCategoryId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereFaqType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereLinkText($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs whereLinkUrl($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<FAQs>|FAQs query()
