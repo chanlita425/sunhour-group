@@ -304,7 +304,7 @@
                         {{ app()->getLocale() === 'en' ? 'FAQs' : (app()->getLocale() === 'km' ? 'សំណួរដែលសួរញឹកញាប់' : 'FAQs') }}
                     </a>
                     </li> --}}
-                    {{-- <li
+                    <li
                         class="{{ Route::is('articles') ? 'border-b-4' : '' }}
                     hover:border-b-4 border-[#3b83db] py-4 transition-all duration-300 ease-in-out">
                         <a href="{{ route('articles', ['locale' => $locale]) }}"
@@ -313,7 +313,7 @@
                         ">
                             {{ app()->getLocale() === 'en' ? 'Article' : (app()->getLocale() === 'km' ? 'អត្ថបទ' : 'Article') }}
                         </a>
-                    </li> --}}
+                    </li>
                     <li>
                         <div class="w-full 2xl:w-[80%] imac-screen" style="">
                             <form action="{{ route('search.index') }}" method="GET"

@@ -23,7 +23,7 @@
             {{-- content --}}
             <div class="relative z-10 mt-[10rem]">
                 <div class="w-full max-w-screen-xl mx-auto px-3 md:px-5">
-                    <div class="w-full max-w-3xl mx-auto px-3 md:px-5">
+                    <div class="w-full mx-auto">
                         <p data-aos="fade-left"
                             class="text-white text-[24px] font-light
                             ">
